@@ -1,6 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:signup_login/view/login_signUp/login.dart';
 
 class LoginController extends GetxController {
   RxBool isLoading = false.obs;
@@ -11,7 +11,7 @@ class LoginController extends GetxController {
     //String email = loginEmailController.text;
     //bool isRegistered = false;
     if (loginEmailController.text.isNotEmpty) {
-      signIn();
+      // signIn();
     } else {
       Get.snackbar(
           'User Not Registered', 'You are not registered. Please sign up.',
@@ -19,8 +19,19 @@ class LoginController extends GetxController {
     }
   }
 
-  void signIn() {
-    Get.to(Login());
+  Future<void> loginWithEmailAndPassword() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: loginEmailController.text,
+        password: loginPasswordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        Get.snackbar("Error", "You are not Register");
+      } else if (e.code == 'wrong-password') {
+        Get.snackbar("Error", "Wrong password");
+      }
+    }
   }
 
   void clear() {

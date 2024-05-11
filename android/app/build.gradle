@@ -58,10 +58,17 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    defaultConfig {
+        multiDexEnabled true
+    }
+
+
 }
 
 flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1'
+}
