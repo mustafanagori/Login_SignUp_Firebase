@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "932017950397",
+    "project_id": "signlogin-db278",
+    "storage_bucket": "signlogin-db278.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932017950397:android:1832613ad6b07a1f97f1d4",
+        "android_client_info": {
+          "package_name": "com.example.signup_login"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcgj1cIcUKtWhuitIyt9e8OiMFIhvZBb4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

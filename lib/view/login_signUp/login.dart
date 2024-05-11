@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/compnent/otherWidget/CustomButton.dart';
 import 'package:signup_login/controller/login_controller.dart';
-import 'package:signup_login/profile.dart';
 import 'package:signup_login/view/login_signUp/wellcome.dart';
 
 class Login extends StatefulWidget {
@@ -169,7 +168,7 @@ class _LoginState extends State<Login> {
                             ),
                             CustomButton(
                               onPressed: () {
-                                Get.to(Profile());
+                                loginController.signIn();
                               },
                               text: "Continue",
                             ),

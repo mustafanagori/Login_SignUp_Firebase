@@ -219,7 +219,7 @@ class _SignUpState extends State<SignUp> {
                               ),
                               CustomButton(
                                 onPressed: () {
-                                  signupController.signUp();
+                                  signupController.registerUser();
                                 },
                                 text: "Agree and Continue",
                               ),

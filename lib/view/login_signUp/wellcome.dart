@@ -105,7 +105,7 @@ class _WellcomeState extends State<Wellcome> {
                           ),
                           CustomButton(
                             onPressed: () {
-                              loginController.navigateToLogin();
+                              loginController.check();
                             },
                             text: "Agree and Continue",
                           ),
