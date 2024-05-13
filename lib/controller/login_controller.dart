@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:signup_login/profile.dart';
+import 'package:signup_login/view/dashboard.dart';
 import 'package:signup_login/view/login_signUp/login.dart';
 import 'package:signup_login/view/login_signUp/wellcome.dart';
 
@@ -34,7 +34,7 @@ class LoginController extends GetxController {
         password: loginPasswordController.text,
       );
       clear();
-      Get.to(const Profile());
+      Get.off(const Dashboard());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'wrong-password') {
         Get.snackbar("Alert", "Wrong password");
