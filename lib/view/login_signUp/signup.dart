@@ -264,11 +264,6 @@ class TopText extends StatelessWidget {
         SizedBox(
           height: h * 0.009,
         ),
-        const Text(
-          "mustafanagori89@gmail.com",
-          style:
-              TextStyle(letterSpacing: 0.1, fontSize: 14, color: Colors.white),
-        ),
       ],
     );
   }

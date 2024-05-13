@@ -62,93 +62,93 @@ class _WellcomeState extends State<Wellcome> {
                     ),
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: h * 0.03,
-                          ),
-                          SizedBox(
-                            height: h * 0.088,
-                            width: w * 0.80,
-                            child: TextFormField(
-                              cursorColor: Colors.green.shade500,
-                              controller: loginController.loginEmailController,
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xFFe7edeb),
-                                hintText: "Email",
-                                prefixIcon: Icon(
-                                  Icons.email,
-                                  color: Colors.grey[600],
-                                  size: 20,
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Please Enter the Email";
-                                }
-                                if (value.length != 11 ||
-                                    !RegExp(r'^\d{11}$').hasMatch(value)) {
-                                  return "Please enter valid  11-digit number";
-                                }
-                                return null; // Return null if the input is valid
-                              },
+                      child: Form(
+                        key: loginController.formkey,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: h * 0.03,
                             ),
-                          ),
-                          SizedBox(
-                            height: h * 0.01,
-                          ),
-                          CustomButton(
-                            onPressed: () {
-                              loginController.checkUserEmailExists();
-                            },
-                            text: "Agree and Continue",
-                          ),
-                          SizedBox(
-                            height: h * 0.015,
-                          ),
-                          const Text(
-                            "or",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          SizedBox(
-                            height: h * 0.015,
-                          ),
-                          SocialButtom(
-                            text: 'Continue With Facebook',
-                            onPressed: () {},
-                            imagePath: 'assets/facebook.png',
-                          ),
-                          SizedBox(
-                            height: h * 0.015,
-                          ),
-                          SocialButtom(
-                            text: 'Continue With Google',
-                            onPressed: () {},
-                            imagePath: 'assets/google.png',
-                          ),
-                          SizedBox(
-                            height: h * 0.015,
-                          ),
-                          SocialButtom(
-                            text: 'Continue With Apple',
-                            onPressed: () {},
-                            imagePath: 'assets/apple.png',
-                          ),
-                          SizedBox(
-                            height: h * 0.025,
-                          ),
-                          const DonthaveAccount(),
-                          SizedBox(
-                            height: h * 0.015,
-                          ),
-                          const ForgetPasswordText(),
-                        ],
+                            SizedBox(
+                              height: h * 0.088,
+                              width: w * 0.80,
+                              child: TextFormField(
+                                cursorColor: Colors.green.shade500,
+                                controller:
+                                    loginController.loginEmailController,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  filled: true,
+                                  fillColor: const Color(0xFFe7edeb),
+                                  hintText: "Email",
+                                  prefixIcon: Icon(
+                                    Icons.email,
+                                    color: Colors.grey[600],
+                                    size: 20,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please Enter the Email";
+                                  }
+                                  return null; // Return null if the input is valid
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: h * 0.01,
+                            ),
+                            CustomButton(
+                              onPressed: () {
+                                loginController.checkUserEmailExists();
+                              },
+                              text: "Agree and Continue",
+                            ),
+                            SizedBox(
+                              height: h * 0.015,
+                            ),
+                            const Text(
+                              "or",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            SizedBox(
+                              height: h * 0.015,
+                            ),
+                            SocialButtom(
+                              text: 'Continue With Facebook',
+                              onPressed: () {},
+                              imagePath: 'assets/facebook.png',
+                            ),
+                            SizedBox(
+                              height: h * 0.015,
+                            ),
+                            SocialButtom(
+                              text: 'Continue With Google',
+                              onPressed: () {},
+                              imagePath: 'assets/google.png',
+                            ),
+                            SizedBox(
+                              height: h * 0.015,
+                            ),
+                            SocialButtom(
+                              text: 'Continue With Apple',
+                              onPressed: () {},
+                              imagePath: 'assets/apple.png',
+                            ),
+                            SizedBox(
+                              height: h * 0.025,
+                            ),
+                            const DonthaveAccount(),
+                            SizedBox(
+                              height: h * 0.015,
+                            ),
+                            const ForgetPasswordText(),
+                          ],
+                        ),
                       ),
                     ),
                   ),

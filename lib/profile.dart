@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,8 @@ class _ProfileState extends State<Profile> {
   LoginController loginController = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+    String email = user!.email!;
     List number = [2, 3, 6, 5, 6, 2];
     if (number.contains(number)) {
       if (kDebugMode) {
@@ -32,6 +35,13 @@ class _ProfileState extends State<Profile> {
                 BgImage(h: h),
                 SizedBox(
                   height: h * 0.12,
+                ),
+                Text(
+                  "Email : $email",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.0),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),

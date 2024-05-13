@@ -7,6 +7,7 @@ import 'package:signup_login/view/login_signUp/login.dart';
 import 'package:signup_login/view/login_signUp/wellcome.dart';
 
 class LoginController extends GetxController {
+  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   RxBool isLoading = false.obs;
   final TextEditingController loginEmailController = TextEditingController();
   final TextEditingController loginPasswordController = TextEditingController();

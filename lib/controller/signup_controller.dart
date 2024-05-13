@@ -7,7 +7,7 @@ import 'package:signup_login/view/login_signUp/wellcome.dart';
 class SignupController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final formkey2 = GlobalKey<FormState>();
+  final GlobalKey<FormState> formkey2 = GlobalKey<FormState>();
 
   void registerUser() async {
     if (formkey2.currentState!.validate()) {
