@@ -69,8 +69,8 @@ class _LoginState extends State<Login> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: Container(
-                    height: h * 0.40,
-                    width: w * 0.90,
+                    height: double.infinity,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(15),
@@ -79,109 +79,113 @@ class _LoginState extends State<Login> {
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: h * 0.03,
-                            ),
-                            Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  child: Image(
-                                    height: h * 0.06,
-                                    image:
-                                        const AssetImage("assets/profile.jpg"),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: w * 0.05,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Email",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Text(
-                                      loginController.loginEmailController.text,
-                                      style: TextStyle(color: Colors.white),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: h * 0.04,
-                            ),
-                            // password filed
-                            TextFormField(
-                              cursorColor: Colors.green.shade500,
-                              obscureText: _isObscure,
-                              controller:
-                                  loginController.loginPasswordController,
-                              keyboardType: TextInputType.name,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: h * 0.002),
-                                fillColor: const Color(0xFFe7edeb),
-                                hintText: "Password",
-                                prefixIcon: Icon(
-                                  Icons.lock,
-                                  color: Colors.grey[600],
-                                  size: 20,
-                                ),
-                                suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _isObscure
-                                          ? Icons.visibility_off
-                                          : Icons.visibility,
-                                      color: Colors.grey[600],
-                                      size: 20,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isObscure = !_isObscure;
-                                      });
-                                    }),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: h * 0.03,
                               ),
-                              validator: (value) {
-                                if (value!.isEmpty && value.length < 6) {
-                                  return "Maximun length 6";
-                                } else {
-                                  return null;
-                                }
-                              },
-                            ),
+                              Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    child: Image(
+                                      height: h * 0.06,
+                                      image: const AssetImage(
+                                          "assets/profile.jpg"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: w * 0.05,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Email",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        loginController
+                                            .loginEmailController.text,
+                                        style: TextStyle(color: Colors.white),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: h * 0.04,
+                              ),
+                              // password filed
+                              TextFormField(
+                                cursorColor: Colors.green.shade500,
+                                obscureText: _isObscure,
+                                controller:
+                                    loginController.loginPasswordController,
+                                keyboardType: TextInputType.name,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  filled: true,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: h * 0.002),
+                                  fillColor: const Color(0xFFe7edeb),
+                                  hintText: "Password",
+                                  prefixIcon: Icon(
+                                    Icons.lock,
+                                    color: Colors.grey[600],
+                                    size: 20,
+                                  ),
+                                  suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _isObscure
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                        color: Colors.grey[600],
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isObscure = !_isObscure;
+                                        });
+                                      }),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty && value.length < 6) {
+                                    return "Maximun length 6";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
 
-                            SizedBox(
-                              height: h * 0.04,
-                            ),
-                            CustomButton(
-                              onPressed: () {
-                                loginController.signIn();
-                              },
-                              text: "Continue",
-                            ),
-                            SizedBox(
-                              height: h * 0.04,
-                            ),
+                              SizedBox(
+                                height: h * 0.04,
+                              ),
+                              CustomButton(
+                                onPressed: () {
+                                  loginController.signIn();
+                                },
+                                text: "Continue",
+                              ),
+                              SizedBox(
+                                height: h * 0.04,
+                              ),
 
-                            Text(
-                              "Forgot your password?",
-                              style: TextStyle(
-                                  letterSpacing: 1.0,
-                                  fontSize: 14,
-                                  color: Colors.green.shade500),
-                            ),
-                          ],
+                              Text(
+                                "Forgot your password?",
+                                style: TextStyle(
+                                    letterSpacing: 1.0,
+                                    fontSize: 14,
+                                    color: Colors.green.shade500),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

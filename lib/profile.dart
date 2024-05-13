@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/controller/login_controller.dart';
@@ -17,12 +16,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
     String email = user!.email!;
-    List number = [2, 3, 6, 5, 6, 2];
-    if (number.contains(number)) {
-      if (kDebugMode) {
-        print("yes");
-      }
-    }
+
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
     return SafeArea(
@@ -38,7 +32,7 @@ class _ProfileState extends State<Profile> {
                 ),
                 Text(
                   "Email : $email",
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w400,
                       fontSize: 16.0),
