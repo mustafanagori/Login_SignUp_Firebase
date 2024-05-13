@@ -99,7 +99,7 @@ class _SignUpState extends State<SignUp> {
                               ),
                               //text field
                               Form(
-                                key: signupController.formkey,
+                                key: signupController.formkey2,
                                 child: Column(
                                   children: [
                                     // sign email field

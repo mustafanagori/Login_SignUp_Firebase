@@ -1,42 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/profile.dart';
 import 'package:signup_login/view/login_signUp/login.dart';
+import 'package:signup_login/view/login_signUp/wellcome.dart';
 
 class LoginController extends GetxController {
   RxBool isLoading = false.obs;
   final TextEditingController loginEmailController = TextEditingController();
   final TextEditingController loginPasswordController = TextEditingController();
-  void navigateToLogin() {
-    // Check if the entered email is registered
-    //String email = loginEmailController.text;
-    //bool isRegistered = false;
-    if (loginEmailController.text.isNotEmpty) {
-      signIn();
+  RxString email = ''.obs;
+  Future<void> checkUserEmailExists() async {
+    var usersCollection = FirebaseFirestore.instance.collection('Users');
+    var email = await usersCollection
+        .where('email', isEqualTo: loginEmailController.text)
+        .get();
+    if (email.docs.isEmpty) {
+      Get.snackbar("Alert", "No account found, please register.",
+          colorText: Colors.white);
     } else {
-      Get.snackbar(
-          'User Not Registered', 'You are not registered. Please sign up.',
-          snackPosition: SnackPosition.TOP, colorText: Colors.white);
-    }
-  }
-
-  Future<void> check() async {
-    print(loginEmailController.text);
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: loginEmailController.text,
-        password: 'temporary_password', // You can use any temporary password
-      );
-
       Get.to(const Login());
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        Get.snackbar("Error ", "Your are not register",
-            colorText: Colors.white);
-      } else {
-        Get.snackbar("error", "${e.email}", colorText: Colors.white);
-      }
     }
   }
 
@@ -49,13 +33,21 @@ class LoginController extends GetxController {
         password: loginPasswordController.text,
       );
       clear();
-      Get.to(Profile());
+      Get.to(const Profile());
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        Get.snackbar("Error", "You are not Register");
-      } else if (e.code == 'wrong-password') {
-        Get.snackbar("Error", "Wrong password");
+      if (e.code == 'wrong-password') {
+        Get.snackbar("Alert", "Wrong password");
       }
+    }
+  }
+
+  Future<void> signOutUser() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Get.offAll(const Wellcome());
+    } catch (e) {
+      Get.snackbar("Sign Out Error", "Failed to sign out: $e",
+          backgroundColor: Colors.redAccent, colorText: Colors.white);
     }
   }
 

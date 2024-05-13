@@ -67,7 +67,6 @@ class _LoginState extends State<Login> {
                 ),
                 // glass container
                 ClipRRect(
-                  // Clipping the BackdropFilter
                   borderRadius: BorderRadius.circular(15),
                   child: Container(
                     height: h * 0.40,
@@ -86,7 +85,6 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               height: h * 0.03,
                             ),
-                            //user Profile
                             Row(
                               children: [
                                 ClipRRect(
@@ -100,15 +98,15 @@ class _LoginState extends State<Login> {
                                 SizedBox(
                                   width: w * 0.05,
                                 ),
-                                const Column(
+                                Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Ghulam Mustafa",
+                                      "Email",
                                       style: TextStyle(color: Colors.white),
                                     ),
                                     Text(
-                                      "mustafanagori89@gmail.com",
+                                      loginController.loginEmailController.text,
                                       style: TextStyle(color: Colors.white),
                                     )
                                   ],

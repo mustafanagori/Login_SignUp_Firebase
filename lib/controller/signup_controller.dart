@@ -7,25 +7,25 @@ import 'package:signup_login/view/login_signUp/wellcome.dart';
 class SignupController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final formkey = GlobalKey<FormState>();
+  final formkey2 = GlobalKey<FormState>();
 
   void registerUser() async {
-    if (formkey.currentState!.validate()) {
+    if (formkey2.currentState!.validate()) {
       print(emailController.text);
       print(passwordController.text);
       try {
-        // Create user in Firebase Authentication
-        UserCredential userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
         );
-
-        // Save user data to Firestore
-        await saveUserDataToFirestore(userCredential.user!.uid);
-
+        if (FirebaseAuth.instance.currentUser != null) {
+          await saveUserDataToFirestore(FirebaseAuth.instance.currentUser!.uid);
+        } else {
+          Get.snackbar("Error", "Please sign in first",
+              colorText: Colors.white);
+        }
         Get.snackbar("Success", "You are registered", colorText: Colors.white);
-        Get.to(const Wellcome());
+        Get.to(() => Wellcome());
         clear();
       } on FirebaseAuthException catch (e) {
         Get.snackbar("Error", "${e.message}", colorText: Colors.white);
@@ -35,13 +35,11 @@ class SignupController extends GetxController {
 
   Future<void> saveUserDataToFirestore(String uid) async {
     try {
-      CollectionReference users = FirebaseFirestore.instance.collection('user');
-
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('Users');
       await users.doc(uid).set({
         'email': emailController.text,
-        // Add more user data fields as needed
       });
-
       print("User data saved to Firestore successfully");
     } catch (e) {
       print("Error saving user data to Firestore: $e");

@@ -1,10 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:signup_login/view/login_signUp/wellcome.dart';
+import 'package:signup_login/controller/login_controller.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  LoginController loginController = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     List number = [2, 3, 6, 5, 6, 2];
@@ -78,8 +85,7 @@ class Profile extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20)),
                           backgroundColor: Colors.green.shade600),
                       onPressed: () {
-                        print("logout");
-                        Get.to(const Wellcome());
+                        loginController.signOutUser();
                       },
                       child: const Text(
                         "Logout",
