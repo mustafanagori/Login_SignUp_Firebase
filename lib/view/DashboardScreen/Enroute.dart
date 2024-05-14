@@ -4,16 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:signup_login/view/drawer.dart';
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+class Enroute extends StatefulWidget {
+  const Enroute({Key? key}) : super(key: key);
 
   @override
-  _DashboardState createState() => _DashboardState();
+  _EnrouteState createState() => _EnrouteState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _EnrouteState extends State<Enroute> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   // geocoder user to convert the lag and lati into your address
@@ -37,7 +36,6 @@ class _DashboardState extends State<Dashboard> {
       position: LatLng(24.88312578106687, 67.05482159331308),
     ),
   ];
-
   @override
   void initState() {
     super.initState();
@@ -46,31 +44,45 @@ class _DashboardState extends State<Dashboard> {
   }
 
   User? user = FirebaseAuth.instance.currentUser;
-
   @override
   Widget build(BuildContext context) {
     String email = user?.email ?? '';
 
     return Scaffold(
-      // backgroundColor: Colors.black,
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: Colors.black,
-        title: const Text(
-          "Dashboard",
-          style: TextStyle(color: Colors.white),
+        body: Stack(
+      children: [
+        GoogleMap(
+          mapType: MapType.hybrid,
+          initialCameraPosition: _currentPosition,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
         ),
-        centerTitle: true,
-      ),
-      drawer: DashboardDrawer(userEmail: email),
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _currentPosition,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-    );
+        Positioned(
+          top: 20,
+          right: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black54,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: TextButton.icon(
+              onPressed: () {
+                _goToGivenPosition();
+              },
+              icon: const Icon(
+                Icons.location_city_rounded,
+                color: Colors.white,
+              ),
+              label: const Text(
+                "Location",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ));
   }
 
   Future<void> _goToGivenPosition() async {
@@ -79,7 +91,7 @@ class _DashboardState extends State<Dashboard> {
       CameraUpdate.newCameraPosition(
         const CameraPosition(
           target: LatLng(24.863081088941897, 67.02858036623955),
-          zoom: 8,
+          zoom: 30,
         ),
       ),
     );

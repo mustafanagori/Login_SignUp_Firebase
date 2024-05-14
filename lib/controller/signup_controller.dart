@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 import 'package:signup_login/view/login_signUp/wellcome.dart';
 
 class SignupController extends GetxController {
+  // ther is the textfield
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formkey2 = GlobalKey<FormState>();
 
+  //user Registration with firebase
   void registerUser() async {
     if (formkey2.currentState!.validate()) {
       print(emailController.text);
@@ -25,7 +27,7 @@ class SignupController extends GetxController {
               colorText: Colors.white);
         }
         Get.snackbar("Success", "You are registered", colorText: Colors.white);
-        Get.to(() => Wellcome());
+        Get.to(() => const Wellcome());
         clear();
       } on FirebaseAuthException catch (e) {
         Get.snackbar("Error", "${e.message}", colorText: Colors.white);
@@ -33,6 +35,7 @@ class SignupController extends GetxController {
     }
   }
 
+  // While register the user save the user email in User collection of firestore
   Future<void> saveUserDataToFirestore(String uid) async {
     try {
       CollectionReference users =
@@ -48,6 +51,7 @@ class SignupController extends GetxController {
     }
   }
 
+  // cleat all textfiel
   void clear() {
     emailController.clear();
     passwordController.clear();

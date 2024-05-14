@@ -1,20 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:signup_login/controller/profile_controller.dart';
 
-class DashboardDrawer extends StatelessWidget {
-  final String userEmail;
+class Profile extends StatelessWidget {
+  Profile({Key? key}) : super(key: key);
 
-  const DashboardDrawer({Key? key, required this.userEmail}) : super(key: key);
+  final ProfileController profileController = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
-    return Drawer(
-      //shadowColor: Colors.white38,
-      backgroundColor: Colors.black54,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Stack(
+    return Scaffold(
+      body: Stack(
         children: [
           Column(
             children: [
@@ -22,26 +22,23 @@ class DashboardDrawer extends StatelessWidget {
               SizedBox(
                 height: h * 0.10,
               ),
-              Text(
-                "Email : $userEmail",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16.0,
-                ),
-              ),
-              SizedBox(
-                height: h * 0.04,
-              ),
+              Obx(() => Text(
+                    profileController.email.value,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.0,
+                    ),
+                  )),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(6.0),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.white24,
                   ),
                   height: h * 0.4,
-                  width: w * 0.7,
+                  width: w * 0.9,
                   child: ListView(
                     children: const [
                       Tile(
@@ -65,7 +62,7 @@ class DashboardDrawer extends StatelessWidget {
                         icon2: Icons.arrow_forward_ios_sharp,
                       ),
                       Tile(
-                        text: "setting",
+                        text: "Setting",
                         icon1: Icons.settings,
                         icon2: Icons.arrow_forward_ios_sharp,
                       ),
@@ -74,20 +71,20 @@ class DashboardDrawer extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: h * 0.07,
+                height: h * 0.05,
               ),
               SizedBox(
                 height: h * 0.06,
-                width: w * 0.65,
+                width: w * 0.8,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    backgroundColor: Colors.green.shade600,
+                    backgroundColor: Colors.blue,
                   ),
                   onPressed: () {
-                    // Handle logout
+                    FirebaseAuth.instance.signOut();
                   },
                   child: const Text(
                     "Logout",
@@ -102,8 +99,8 @@ class DashboardDrawer extends StatelessWidget {
             ],
           ),
           Positioned(
-            left: w * 0.25,
-            top: h * 0.14,
+            left: w * 0.3,
+            top: h * 0.12,
             child: Stack(
               children: [
                 const CircleAvatar(
@@ -129,9 +126,9 @@ class DashboardDrawer extends StatelessWidget {
 
 class BgImage extends StatelessWidget {
   const BgImage({
-    super.key,
+    Key? key,
     required this.h,
-  });
+  }) : super(key: key);
 
   final double h;
 
@@ -172,16 +169,16 @@ class Tile extends StatelessWidget {
     return ListTile(
       title: Text(
         text,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.black),
       ),
       leading: Icon(
         icon1,
         size: 22,
-        color: Colors.green.shade600,
+        color: Colors.blue,
       ),
       trailing: Icon(
         icon2,
-        color: Colors.white,
+        color: Colors.blue,
         size: 18,
       ),
     );

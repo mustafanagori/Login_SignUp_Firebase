@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/controller/login_controller.dart';
 import 'package:signup_login/controller/signup_controller.dart';
-import 'package:signup_login/view/dashboard.dart';
 import 'package:signup_login/view/login_signUp/wellcome.dart';
+import 'package:signup_login/view/navigation.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -29,9 +29,9 @@ class _SplashScreenState extends State<SplashScreen> {
         const Duration(seconds: 3)); // Simulate a splash screen delay
 
     if (user != null) {
-      Get.off(() => Dashboard());
+      Get.off(() => Navigation());
     } else {
-      Get.off(() => Wellcome());
+      Get.off(() => const Wellcome());
     }
   }
 
