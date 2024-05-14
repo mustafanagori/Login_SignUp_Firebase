@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/compnent/otherWidget/CustomButton.dart';
 import 'package:signup_login/controller/signup_controller.dart';
-import 'package:signup_login/view/login_signUp/wellcome.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -14,21 +13,8 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  bool isPasswordVisible = false;
-  SignupController signupController = Get.put(SignupController());
-
-  bool showProgress = false;
-  bool visible = false;
-  bool confrimPass = false;
+  final SignupController signupController = Get.put(SignupController());
   bool _isObscure = true;
-  @override
-  void initState() {
-    print("call recevied");
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,176 +25,154 @@ class _SignUpState extends State<SignUp> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-          appBar: AppBar(
-              backgroundColor: Colors.black,
-              leading: IconButton(
-                onPressed: () {
-                  Get.to(Wellcome());
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                ),
-              )),
-          body: Container(
-              height: double.infinity,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/black.jpg"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: h * 0.1,
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/wellcome.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: h * 0.2),
+                    const Text(
+                      "Register Now !",
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
-                      //text
-                      const Text(
-                        "Sign Up ",
-                        style: TextStyle(
-                            fontSize: 40,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      // glass container
-                      ClipRRect(
-                        // Clipping the BackdropFilter
-                        borderRadius: BorderRadius.circular(15),
-                        child: Container(
-                          height: h * 0.55,
-                          width: w * 0.90,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                    ),
+                    const SizedBox(height: 20),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Container(
+                        height: h * 0.55,
+                        width: w * 0.90,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Form(
+                              key: signupController.signupFormKey,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(
-                                    height: h * 0.03,
-                                  ),
+                                  SizedBox(height: h * 0.03),
                                   TopText(h: h),
-                                  SizedBox(
-                                    height: h * 0.02,
-                                  ),
-                                  //text field
-                                  Form(
-                                    key: signupController.formkey2,
-                                    child: Column(
-                                      children: [
-                                        // sign email field
-                                        SizedBox(
-                                          height: h * 0.08,
-                                          child: TextFormField(
-                                            cursorColor: Colors.green.shade500,
-                                            controller: signupController
-                                                .emailController,
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              filled: true,
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      vertical: h * 0.002),
-                                              fillColor:
-                                                  const Color(0xFFe7edeb),
-                                              hintText: "Email",
-                                              prefixIcon: Icon(
-                                                Icons.email,
+                                  SizedBox(height: h * 0.02),
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        height: h * 0.08,
+                                        child: TextFormField(
+                                          cursorColor: Colors.green.shade500,
+                                          controller:
+                                              signupController.emailController,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            filled: true,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: h * 0.002),
+                                            fillColor: const Color(0xFFe7edeb),
+                                            hintText: "Email",
+                                            prefixIcon: Icon(
+                                              Icons.email,
+                                              color: Colors.grey[600],
+                                              size: 20,
+                                            ),
+                                          ),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Please enter an email";
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: h * 0.08,
+                                        child: TextFormField(
+                                          cursorColor: Colors.green.shade100,
+                                          obscureText: _isObscure,
+                                          controller: signupController
+                                              .passwordController,
+                                          keyboardType: TextInputType.text,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            filled: true,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: h * 0.002),
+                                            fillColor: const Color(0xFFe7edeb),
+                                            hintText: "Password",
+                                            prefixIcon: Icon(
+                                              Icons.lock,
+                                              color: Colors.grey[600],
+                                              size: 20,
+                                            ),
+                                            suffixIcon: IconButton(
+                                              icon: Icon(
+                                                _isObscure
+                                                    ? Icons.visibility_off
+                                                    : Icons.visibility,
                                                 color: Colors.grey[600],
                                                 size: 20,
                                               ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _isObscure = !_isObscure;
+                                                });
+                                              },
                                             ),
                                           ),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Please enter a password";
+                                            } else if (value.length < 6) {
+                                              return "Password must be at least 6 characters";
+                                            }
+                                            return null;
+                                          },
                                         ),
-                                        // sign password fiel
-                                        SizedBox(
-                                          height: h * 0.08,
-                                          child: TextFormField(
-                                            cursorColor: Colors.green.shade500,
-                                            obscureText: _isObscure,
-                                            controller: signupController
-                                                .passwordController,
-                                            keyboardType: TextInputType.name,
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              filled: true,
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      vertical: h * 0.002),
-                                              fillColor:
-                                                  const Color(0xFFe7edeb),
-                                              hintText: "Password",
-                                              prefixIcon: Icon(
-                                                Icons.lock,
-                                                color: Colors.grey[600],
-                                                size: 20,
-                                              ),
-                                              suffixIcon: IconButton(
-                                                  icon: Icon(
-                                                    _isObscure
-                                                        ? Icons.visibility_off
-                                                        : Icons.visibility,
-                                                    color: Colors.grey[600],
-                                                    size: 20,
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _isObscure = !_isObscure;
-                                                    });
-                                                  }),
-                                            ),
-                                            validator: (value) {
-                                              if (value!.isEmpty &&
-                                                  value.length < 6) {
-                                                return "Maximun length 6";
-                                              } else {
-                                                return null;
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  // size box
-                                  SizedBox(
-                                    height: h * 0.01,
-                                  ),
+                                  SizedBox(height: h * 0.01),
                                   const Text(
-                                    "By selecting Agree and continue below ,",
+                                    "By selecting Agree and continue below,",
                                     style: TextStyle(
                                         letterSpacing: 1.0,
                                         fontSize: 14,
                                         color: Colors.white),
                                   ),
-                                  SizedBox(
-                                    height: h * 0.005,
-                                  ),
+                                  SizedBox(height: h * 0.005),
                                   Row(
                                     children: [
                                       const Text(
@@ -219,17 +183,15 @@ class _SignUpState extends State<SignUp> {
                                             color: Colors.white),
                                       ),
                                       Text(
-                                        "Term of Service and Privacy policy",
+                                        "Terms of Service and Privacy Policy",
                                         style: TextStyle(
-                                            letterSpacing: 1.0,
-                                            fontSize: 12,
-                                            color: Colors.green.shade500),
+                                          fontSize: 14,
+                                          color: Colors.green.shade200,
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: h * 0.04,
-                                  ),
+                                  SizedBox(height: h * 0.04),
                                   CustomButton(
                                     onPressed: () {
                                       signupController.registerUser();
@@ -242,20 +204,20 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ))),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
 
 class TopText extends StatelessWidget {
-  const TopText({
-    super.key,
-    required this.h,
-  });
-
+  const TopText({super.key, required this.h});
   final double h;
 
   @override
@@ -264,21 +226,17 @@ class TopText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          "Look Like you don't have an account.",
+          "Looks like you don't have an account.",
           style:
               TextStyle(letterSpacing: 0.1, fontSize: 14, color: Colors.white),
         ),
-        SizedBox(
-          height: h * 0.009,
-        ),
+        SizedBox(height: h * 0.009),
         const Text(
-          "Lets Create a new account for",
+          "Let's create a new account for you.",
           style:
               TextStyle(letterSpacing: 0.1, fontSize: 14, color: Colors.white),
         ),
-        SizedBox(
-          height: h * 0.009,
-        ),
+        SizedBox(height: h * 0.009),
       ],
     );
   }

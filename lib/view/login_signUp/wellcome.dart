@@ -33,7 +33,7 @@ class _WellcomeState extends State<Wellcome> {
             height: double.infinity,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/black.jpg"),
+                image: AssetImage("assets/wellcome.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -48,9 +48,9 @@ class _WellcomeState extends State<Wellcome> {
                       height: h * 0.1,
                     ),
                     const Text(
-                      "Hi !",
+                      "EV Charger!",
                       style: TextStyle(
-                          fontSize: 40,
+                          fontSize: 30,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
                     ),
@@ -63,13 +63,13 @@ class _WellcomeState extends State<Wellcome> {
                         height: h * 0.62,
                         width: w * 0.90,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                           child: Form(
-                            key: loginController.formkey,
+                            key: loginController.loginEmailFormKey,
                             child: Column(
                               children: [
                                 SizedBox(
@@ -79,7 +79,7 @@ class _WellcomeState extends State<Wellcome> {
                                   height: h * 0.088,
                                   width: w * 0.80,
                                   child: TextFormField(
-                                    cursorColor: Colors.green.shade500,
+                                    cursorColor: Colors.blue.shade500,
                                     controller:
                                         loginController.loginEmailController,
                                     keyboardType: TextInputType.emailAddress,

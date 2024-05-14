@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/controller/navigation_controller.dart';
 import 'package:signup_login/view/DashboardScreen/Enroute.dart';
-import 'package:signup_login/view/DashboardScreen/Search.dart';
 import 'package:signup_login/view/DashboardScreen/favourite.dart';
 import 'package:signup_login/view/DashboardScreen/profile.dart';
+import 'package:signup_login/view/DashboardScreen/booking.dart';
 
 class Navigation extends StatefulWidget {
   Navigation({super.key});
@@ -30,7 +30,7 @@ class _NavigationState extends State<Navigation> {
             index: bottomNavigationContoller.selectedIndex.value,
             children: [
               Enroute(),
-              Search(),
+              Booking(),
               Favourite(),
               Profile(),
             ],
@@ -54,12 +54,12 @@ class _NavigationState extends State<Navigation> {
             onTap: bottomNavigationContoller.changeIndex,
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(Icons.location_pin),
-                label: "Search",
-              ),
-              BottomNavigationBarItem(
                 icon: Icon(Icons.route_outlined),
                 label: "En route",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.schedule),
+                label: "Booking",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.favorite),

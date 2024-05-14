@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/compnent/otherWidget/CustomButton.dart';
 import 'package:signup_login/controller/login_controller.dart';
-import 'package:signup_login/view/login_signUp/wellcome.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -32,23 +31,12 @@ class _LoginState extends State<Login> {
           FocusScope.of(context).unfocus();
         },
         child: Scaffold(
-          appBar: AppBar(
-              backgroundColor: Colors.black,
-              leading: IconButton(
-                onPressed: () {
-                  Get.to(Wellcome());
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                ),
-              )),
           body: Container(
             height: double.infinity,
             width: double.infinity,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/black.jpg"),
+                image: AssetImage("assets/wellcome.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -76,7 +64,7 @@ class _LoginState extends State<Login> {
                       height: h * 0.40,
                       width: w * 0.90,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withOpacity(0.09),
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: BackdropFilter(
@@ -123,48 +111,51 @@ class _LoginState extends State<Login> {
                                 height: h * 0.04,
                               ),
                               // password filed
-                              TextFormField(
-                                cursorColor: Colors.green.shade500,
-                                obscureText: _isObscure,
-                                controller:
-                                    loginController.loginPasswordController,
-                                keyboardType: TextInputType.name,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    borderSide: BorderSide.none,
+                              Form(
+                                key: loginController.loginPasswordFormKey,
+                                child: TextFormField(
+                                  cursorColor: Colors.green.shade500,
+                                  obscureText: _isObscure,
+                                  controller:
+                                      loginController.loginPasswordController,
+                                  keyboardType: TextInputType.name,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: h * 0.002),
+                                    fillColor: const Color(0xFFe7edeb),
+                                    hintText: "Password",
+                                    prefixIcon: Icon(
+                                      Icons.lock,
+                                      color: Colors.grey[600],
+                                      size: 20,
+                                    ),
+                                    suffixIcon: IconButton(
+                                        icon: Icon(
+                                          _isObscure
+                                              ? Icons.visibility_off
+                                              : Icons.visibility,
+                                          color: Colors.grey[600],
+                                          size: 20,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _isObscure = !_isObscure;
+                                          });
+                                        }),
                                   ),
-                                  filled: true,
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: h * 0.002),
-                                  fillColor: const Color(0xFFe7edeb),
-                                  hintText: "Password",
-                                  prefixIcon: Icon(
-                                    Icons.lock,
-                                    color: Colors.grey[600],
-                                    size: 20,
-                                  ),
-                                  suffixIcon: IconButton(
-                                      icon: Icon(
-                                        _isObscure
-                                            ? Icons.visibility_off
-                                            : Icons.visibility,
-                                        color: Colors.grey[600],
-                                        size: 20,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _isObscure = !_isObscure;
-                                        });
-                                      }),
+                                  validator: (value) {
+                                    if (value!.isEmpty && value.length < 6) {
+                                      return "Maximun length 6";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
                                 ),
-                                validator: (value) {
-                                  if (value!.isEmpty && value.length < 6) {
-                                    return "Maximun length 6";
-                                  } else {
-                                    return null;
-                                  }
-                                },
                               ),
 
                               SizedBox(
@@ -180,12 +171,14 @@ class _LoginState extends State<Login> {
                                 height: h * 0.04,
                               ),
 
-                              Text(
-                                "Forgot your password?",
-                                style: TextStyle(
-                                    letterSpacing: 1.0,
-                                    fontSize: 14,
-                                    color: Colors.green.shade500),
+                              Center(
+                                child: Text(
+                                  "Forgot your password?",
+                                  style: TextStyle(
+                                      letterSpacing: 1.0,
+                                      fontSize: 15,
+                                      color: Colors.green.shade200),
+                                ),
                               ),
                             ],
                           ),

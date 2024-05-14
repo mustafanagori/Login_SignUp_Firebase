@@ -1,12 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:signup_login/controller/login_controller.dart';
 import 'package:signup_login/controller/profile_controller.dart';
 
 class Profile extends StatelessWidget {
   Profile({Key? key}) : super(key: key);
 
   final ProfileController profileController = Get.put(ProfileController());
+  LoginController loginController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +85,7 @@ class Profile extends StatelessWidget {
                     backgroundColor: Colors.blue,
                   ),
                   onPressed: () {
-                    FirebaseAuth.instance.signOut();
+                    loginController.signOutUser();
                   },
                   child: const Text(
                     "Logout",

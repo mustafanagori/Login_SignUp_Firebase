@@ -23,9 +23,9 @@ class Favourite extends StatelessWidget {
           horizontal: w * 0.03,
         ),
         child: ListView.builder(
-          itemCount: favrouiteController.stations.length,
+          itemCount: favrouiteController.favrouiteStation.length,
           itemBuilder: (context, index) {
-            final station = favrouiteController.stations[index];
+            final station = favrouiteController.favrouiteStation[index];
             return FavrouiteStationCard(
               path: station['path']!,
               stationName: station['name']!,

@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:signup_login/compnent/Enroute/nearstation.dart';
+import 'package:signup_login/controller/enroute_Controller.dart';
 
 class Enroute extends StatefulWidget {
   const Enroute({Key? key}) : super(key: key);
@@ -13,14 +16,14 @@ class Enroute extends StatefulWidget {
 }
 
 class _EnrouteState extends State<Enroute> {
+  EnrouteController enrouteController = Get.put(EnrouteController());
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-  // geocoder user to convert the lag and lati into your address
+
   static const CameraPosition _currentPosition = CameraPosition(
     target: LatLng(24.881501200552584, 67.06379402729937),
     zoom: 14.4746,
   );
-
   List<Marker> _marker = [];
   final List<Marker> _list = const [
     Marker(
@@ -46,43 +49,77 @@ class _EnrouteState extends State<Enroute> {
   User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
-    String email = user?.email ?? '';
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        body: Stack(
-      children: [
-        GoogleMap(
-          mapType: MapType.hybrid,
-          initialCameraPosition: _currentPosition,
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-          },
-        ),
-        Positioned(
-          top: 20,
-          right: 0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black54,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: TextButton.icon(
-              onPressed: () {
-                _goToGivenPosition();
-              },
-              icon: const Icon(
-                Icons.location_city_rounded,
-                color: Colors.white,
-              ),
-              label: const Text(
-                "Location",
-                style: TextStyle(color: Colors.white),
-              ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 4,
+            child: Stack(
+              children: [
+                GoogleMap(
+                  mapType: MapType.hybrid,
+                  initialCameraPosition: _currentPosition,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                  },
+                  markers: Set<Marker>.of(_marker),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: TextButton.icon(
+                      onPressed: () {
+                        _goToGivenPosition();
+                      },
+                      icon: const Icon(
+                        Icons.location_city_rounded,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        "Location",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: SizedBox(
+                    height: h * 0.2,
+                    width: w,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: h * 0.005,
+                        horizontal: w * 0.01,
+                      ),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: enrouteController.nearStation.length,
+                        itemBuilder: (context, index) {
+                          final station = enrouteController.nearStation[index];
+                          return NearStation(
+                            path: station['path'] ?? '',
+                            stationName: station['name'] ?? 'Unknown',
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   Future<void> _goToGivenPosition() async {

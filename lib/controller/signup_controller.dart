@@ -5,14 +5,12 @@ import 'package:get/get.dart';
 import 'package:signup_login/view/login_signUp/wellcome.dart';
 
 class SignupController extends GetxController {
-  // ther is the textfield
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final GlobalKey<FormState> formkey2 = GlobalKey<FormState>();
+  final GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 
-  //user Registration with firebase
   void registerUser() async {
-    if (formkey2.currentState!.validate()) {
+    if (signupFormKey.currentState!.validate()) {
       print(emailController.text);
       print(passwordController.text);
       try {
@@ -35,7 +33,6 @@ class SignupController extends GetxController {
     }
   }
 
-  // While register the user save the user email in User collection of firestore
   Future<void> saveUserDataToFirestore(String uid) async {
     try {
       CollectionReference users =
@@ -51,7 +48,6 @@ class SignupController extends GetxController {
     }
   }
 
-  // cleat all textfiel
   void clear() {
     emailController.clear();
     passwordController.clear();

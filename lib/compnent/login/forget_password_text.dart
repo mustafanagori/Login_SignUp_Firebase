@@ -13,7 +13,7 @@ class ForgetPasswordText extends StatelessWidget {
       },
       child: Text(
         "Forget password?",
-        style: TextStyle(color: Colors.green.shade500, fontSize: 16),
+        style: TextStyle(color: Colors.green.shade100, fontSize: 16),
       ),
     );
   }

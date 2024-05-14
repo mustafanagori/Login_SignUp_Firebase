@@ -33,7 +33,7 @@ class DonthaveAccount extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.normal,
               fontSize: 16,
-              color: Colors.green.shade600,
+              color: Colors.green.shade100,
             ),
           ),
         ),

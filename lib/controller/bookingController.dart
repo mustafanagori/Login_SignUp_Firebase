@@ -1,10 +1,8 @@
 import 'package:get/get.dart';
 
-class FavrouiteController extends GetxController {
-  // list of map for add favrouite item
-  final List<Map<String, String>> favrouite = [];
+class BookingController extends GetxController {
   // List of stations
-  final List<Map<String, String>> favrouiteStation = [
+  final List<Map<String, String>> booking = [
     {
       "name": "Broome Charging Station",
       "path": "assets/station/1.jpeg",
@@ -42,6 +40,4 @@ class FavrouiteController extends GetxController {
       "path": "assets/station/9.jpeg",
     },
   ];
-
-  void removeFromFavrouite() {}
 }
