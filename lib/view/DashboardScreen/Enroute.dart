@@ -96,22 +96,23 @@ class _EnrouteState extends State<Enroute> {
                     height: h * 0.2,
                     width: w,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: h * 0.005,
-                        horizontal: w * 0.01,
-                      ),
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: enrouteController.nearStation.length,
-                        itemBuilder: (context, index) {
-                          final station = enrouteController.nearStation[index];
-                          return NearStation(
-                            path: station['path'] ?? '',
-                            stationName: station['name'] ?? 'Unknown',
-                          );
-                        },
-                      ),
-                    ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: h * 0.005,
+                          horizontal: w * 0.01,
+                        ),
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: enrouteController.nearStation.length,
+                          itemBuilder: (context, index) {
+                            final station =
+                                enrouteController.nearStation[index];
+                            return NearStation(
+                              path: station['path'] ?? '',
+                              stationName: station['name'] ?? 'Unknown',
+                              status: station['status'] ?? 'Unknown',
+                            );
+                          },
+                        )),
                   ),
                 )
               ],
