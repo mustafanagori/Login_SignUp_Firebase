@@ -3,7 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/compnent/otherWidget/CustomButton.dart';
-import 'package:signup_login/controller/login_controller.dart';
+
+import '../../controller/login_controller.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -13,12 +14,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  bool isPasswordVisible = false;
-  LoginController loginController = Get.put(LoginController());
-
-  bool showProgress = false;
-  bool visible = false;
-  bool confrimPass = false;
+  final LoginController loginController = Get.put(LoginController());
   bool _isObscure = true;
 
   @override
@@ -46,7 +42,6 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //text
                   const Text(
                     "Log in",
                     style: TextStyle(
@@ -57,7 +52,6 @@ class _LoginState extends State<Login> {
                   const SizedBox(
                     height: 20,
                   ),
-                  // glass container
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
@@ -94,14 +88,15 @@ class _LoginState extends State<Login> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "Email",
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       Text(
                                         loginController
                                             .loginEmailController.text,
-                                        style: TextStyle(color: Colors.white),
+                                        style: const TextStyle(
+                                            color: Colors.white),
                                       )
                                     ],
                                   )
@@ -110,7 +105,6 @@ class _LoginState extends State<Login> {
                               SizedBox(
                                 height: h * 0.04,
                               ),
-                              // password filed
                               Form(
                                 key: loginController.loginPasswordFormKey,
                                 child: TextFormField(
@@ -118,7 +112,7 @@ class _LoginState extends State<Login> {
                                   obscureText: _isObscure,
                                   controller:
                                       loginController.loginPasswordController,
-                                  keyboardType: TextInputType.name,
+                                  keyboardType: TextInputType.visiblePassword,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8.0),
@@ -149,28 +143,39 @@ class _LoginState extends State<Login> {
                                         }),
                                   ),
                                   validator: (value) {
-                                    if (value!.isEmpty && value.length < 6) {
-                                      return "Maximun length 6";
+                                    if (value!.isEmpty || value.length < 6) {
+                                      return "Password must be at least 6 characters long";
                                     } else {
                                       return null;
                                     }
                                   },
                                 ),
                               ),
-
                               SizedBox(
                                 height: h * 0.04,
                               ),
-                              CustomButton(
-                                onPressed: () {
-                                  loginController.signIn();
-                                },
-                                text: "Continue",
+                              Obx(
+                                () => loginController.isLoadingSignIn.value
+                                    ? const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : CustomButton(
+                                        onPressed: () {
+                                          if (loginController
+                                              .loginPasswordFormKey
+                                              .currentState!
+                                              .validate()) {
+                                            loginController.signIn();
+                                          }
+                                        },
+                                        text: "Continue",
+                                      ),
                               ),
                               SizedBox(
                                 height: h * 0.04,
                               ),
-
                               Center(
                                 child: Text(
                                   "Forgot your password?",

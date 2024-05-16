@@ -10,16 +10,20 @@ class LoginController extends GetxController {
   final GlobalKey<FormState> loginPasswordFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> loginEmailFormKey = GlobalKey<FormState>();
   RxBool isLoading = false.obs;
-  // TextEditing Controller for login textFied
+
+  // TextEditing Controller for login textField
   final TextEditingController loginEmailController = TextEditingController();
   final TextEditingController loginPasswordController = TextEditingController();
 
-  // check user email to firebase firestore there user exxist on uses collection ot not
+  // check user email in Firebase Firestore to see if user exists in Users collection
+  RxBool isLoadingCheckUser = false.obs;
   Future<void> checkUserEmailExists() async {
+    isLoadingCheckUser.value = true;
     var usersCollection = FirebaseFirestore.instance.collection('Users');
     var email = await usersCollection
         .where('email', isEqualTo: loginEmailController.text)
         .get();
+    isLoadingCheckUser.value = false;
     if (email.docs.isEmpty) {
       Get.snackbar("Alert", "No account found, please register.",
           colorText: Colors.white);
@@ -28,34 +32,42 @@ class LoginController extends GetxController {
     }
   }
 
-  // signup the user using  email and password
+  // sign in the user using email and password
+  RxBool isLoadingSignIn = false.obs;
   Future<void> signIn() async {
+    isLoadingSignIn.value = true;
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: loginEmailController.text,
         password: loginPasswordController.text,
       );
+      isLoadingSignIn.value = false;
       clear();
       Get.off(() => Navigation());
     } on FirebaseAuthException catch (e) {
+      isLoadingSignIn.value = false;
       if (e.code == 'wrong-password') {
         Get.snackbar("Alert", "Wrong password");
       }
     }
   }
 
-  // sign out the user from firebases
+  // sign out the user from Firebase
+  RxBool isLoadingSignOut = false.obs;
   Future<void> signOutUser() async {
     try {
+      isLoadingSignOut.value = true;
       await FirebaseAuth.instance.signOut();
-      Get.offAll(const Wellcome());
+      isLoadingSignOut.value = false;
+      Get.offAll(() => Wellcome());
     } catch (e) {
+      isLoadingSignOut.value = false;
       Get.snackbar("Sign Out Error", "Failed to sign out: $e",
           backgroundColor: Colors.redAccent, colorText: Colors.white);
     }
   }
 
-  //clear the field
+  // clear the text fields
   void clear() {
     loginEmailController.clear();
     loginPasswordController.clear();

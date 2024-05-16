@@ -84,7 +84,7 @@ class OngoingBookingCard extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           onPressed: () {},
@@ -92,6 +92,7 @@ class OngoingBookingCard extends StatelessWidget {
                             "Go details",
                             style: TextStyle(
                               color: Colors.white,
+                              fontSize: 13,
                             ),
                           ),
                         ),
@@ -104,7 +105,7 @@ class OngoingBookingCard extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           onPressed: () {},
@@ -112,6 +113,7 @@ class OngoingBookingCard extends StatelessWidget {
                             "Cancel Slot",
                             style: TextStyle(
                               color: Colors.blue,
+                              fontSize: 13,
                             ),
                           ),
                         ),

@@ -11,13 +11,14 @@ import '../../controller/login_controller.dart';
 
 class Wellcome extends StatefulWidget {
   const Wellcome({Key? key}) : super(key: key);
+
   @override
   State<Wellcome> createState() => _WellcomeState();
 }
 
 class _WellcomeState extends State<Wellcome> {
-  bool isPasswordVisible = false;
-  LoginController loginController = Get.put(LoginController());
+  final LoginController loginController = Get.put(LoginController());
+
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -110,11 +111,20 @@ class _WellcomeState extends State<Wellcome> {
                                 SizedBox(
                                   height: h * 0.01,
                                 ),
-                                CustomButton(
-                                  onPressed: () {
-                                    loginController.checkUserEmailExists();
-                                  },
-                                  text: "Agree and Continue",
+                                Obx(
+                                  () => loginController.isLoadingSignIn.value
+                                      ? const Center(
+                                          child: CircularProgressIndicator(
+                                            color: Colors.blue,
+                                          ),
+                                        )
+                                      : CustomButton(
+                                          onPressed: () {
+                                            loginController
+                                                .checkUserEmailExists();
+                                          },
+                                          text: "Agree and Continue",
+                                        ),
                                 ),
                                 SizedBox(
                                   height: h * 0.015,

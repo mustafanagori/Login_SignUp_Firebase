@@ -52,10 +52,11 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    // glass container
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Container(
-                        height: h * 0.55,
+                        height: h * 0.65,
                         width: w * 0.90,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.1),
@@ -76,6 +77,42 @@ class _SignUpState extends State<SignUp> {
                                   SizedBox(height: h * 0.02),
                                   Column(
                                     children: [
+                                      // Name TextFied
+                                      SizedBox(
+                                        height: h * 0.08,
+                                        child: TextFormField(
+                                          cursorColor: Colors.green.shade500,
+                                          controller:
+                                              signupController.nameController,
+                                          keyboardType: TextInputType.name,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              borderSide: BorderSide.none,
+                                            ),
+                                            filled: true,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: h * 0.002),
+                                            fillColor: const Color(0xFFe7edeb),
+                                            hintText: "Name",
+                                            prefixIcon: Icon(
+                                              Icons.person,
+                                              color: Colors.grey[600],
+                                              size: 20,
+                                            ),
+                                          ),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Please enter an name";
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      // Email Textfield
                                       SizedBox(
                                         height: h * 0.08,
                                         child: TextFormField(
@@ -111,6 +148,7 @@ class _SignUpState extends State<SignUp> {
                                           },
                                         ),
                                       ),
+                                      // Password Textfield
                                       SizedBox(
                                         height: h * 0.08,
                                         child: TextFormField(
@@ -168,9 +206,10 @@ class _SignUpState extends State<SignUp> {
                                   const Text(
                                     "By selecting Agree and continue below,",
                                     style: TextStyle(
-                                        letterSpacing: 1.0,
-                                        fontSize: 14,
-                                        color: Colors.white),
+                                      letterSpacing: 1.0,
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                   SizedBox(height: h * 0.005),
                                   Row(
@@ -178,9 +217,10 @@ class _SignUpState extends State<SignUp> {
                                       const Text(
                                         "I agree to ",
                                         style: TextStyle(
-                                            letterSpacing: 1.0,
-                                            fontSize: 12,
-                                            color: Colors.white),
+                                          letterSpacing: 1.0,
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                       Text(
                                         "Terms of Service and Privacy Policy",
@@ -192,11 +232,19 @@ class _SignUpState extends State<SignUp> {
                                     ],
                                   ),
                                   SizedBox(height: h * 0.04),
-                                  CustomButton(
-                                    onPressed: () {
-                                      signupController.registerUser();
-                                    },
-                                    text: "Agree and Continue",
+                                  Obx(
+                                    () => signupController.isLoadingSignUp.value
+                                        ? const Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : CustomButton(
+                                            onPressed: () {
+                                              signupController.registerUser();
+                                            },
+                                            text: "Agree and Continue",
+                                          ),
                                   ),
                                 ],
                               ),

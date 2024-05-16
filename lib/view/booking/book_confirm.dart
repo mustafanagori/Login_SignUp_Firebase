@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:signup_login/view/payment.dart';
 
 class BookConfirm extends StatefulWidget {
   const BookConfirm({super.key});
@@ -218,7 +219,7 @@ class _BookConfirmState extends State<BookConfirm> {
                     backgroundColor: Colors.blue,
                   ),
                   onPressed: () {
-                    Get.to(const BookConfirm());
+                    Get.to(const Payment());
                   },
                   child: const Text(
                     "Make Payment",

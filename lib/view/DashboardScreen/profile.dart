@@ -32,14 +32,14 @@ class Profile extends StatelessWidget {
                     ),
                   )),
               Padding(
-                padding: const EdgeInsets.all(6.0),
+                padding: const EdgeInsets.all(4.0),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.white24,
                   ),
                   height: h * 0.4,
-                  width: w * 0.9,
+                  width: w * 0.98,
                   child: ListView(
                     children: const [
                       Tile(
@@ -74,28 +74,36 @@ class Profile extends StatelessWidget {
               SizedBox(
                 height: h * 0.05,
               ),
-              SizedBox(
-                height: h * 0.06,
-                width: w * 0.8,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    backgroundColor: Colors.blue,
-                  ),
-                  onPressed: () {
-                    loginController.signOutUser();
-                  },
-                  child: const Text(
-                    "Logout",
-                    style: TextStyle(
-                      fontSize: 19,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
+              Obx(
+                () => loginController.isLoadingSignOut.value
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.blue,
+                        ),
+                      )
+                    : SizedBox(
+                        height: h * 0.06,
+                        width: w * 0.8,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            backgroundColor: Colors.blue,
+                          ),
+                          onPressed: () {
+                            loginController.signOutUser();
+                          },
+                          child: const Text(
+                            "Logout",
+                            style: TextStyle(
+                              fontSize: 19,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
               ),
             ],
           ),
@@ -127,12 +135,11 @@ class Profile extends StatelessWidget {
 
 class BgImage extends StatelessWidget {
   const BgImage({
-    Key? key,
+    super.key,
     required this.h,
-  }) : super(key: key);
+  });
 
   final double h;
-
   @override
   Widget build(BuildContext context) {
     return Container(
