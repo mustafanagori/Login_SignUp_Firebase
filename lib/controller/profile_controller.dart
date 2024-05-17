@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 class ProfileController extends GetxController {
   var uid = ''.obs;
   var email = ''.obs;
+  var name = ''.obs;
 
   @override
   void onInit() {
@@ -16,7 +17,6 @@ class ProfileController extends GetxController {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       uid.value = user.uid;
-      email.value = user.email ?? '';
       fetchUserData(user.uid);
     }
   }
@@ -24,9 +24,12 @@ class ProfileController extends GetxController {
   Future<void> fetchUserData(String uid) async {
     try {
       final documentSnapshot =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+          await FirebaseFirestore.instance.collection('Users').doc(uid).get();
       if (documentSnapshot.exists) {
         email.value = documentSnapshot.data()?['email'] ?? '';
+        name.value = documentSnapshot.data()?['name'] ?? 'no name';
+      } else {
+        print('User document does not exist in Firestore');
       }
     } catch (e) {
       print('Error fetching user data: $e');

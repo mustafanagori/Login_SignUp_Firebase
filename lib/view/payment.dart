@@ -37,7 +37,7 @@ class _PaymentState extends State<Payment> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 height: h * 0.45,
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -51,7 +51,7 @@ class _PaymentState extends State<Payment> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "Card Number",
                       style: TextStyle(fontSize: 18, color: Colors.blue),
                     ),
@@ -65,7 +65,8 @@ class _PaymentState extends State<Payment> {
                       defaultPinTheme: PinTheme(
                         width: 35,
                         height: 35,
-                        textStyle: TextStyle(fontSize: 16, color: Colors.blue),
+                        textStyle:
+                            const TextStyle(fontSize: 16, color: Colors.blue),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black),
                           borderRadius: BorderRadius.circular(6),
@@ -77,7 +78,7 @@ class _PaymentState extends State<Payment> {
                       height: h * 0.02,
                     ),
 
-                    Text(
+                    const Text(
                       "Card Holder Name",
                       style: TextStyle(fontSize: 18, color: Colors.blue),
                     ),
@@ -122,7 +123,7 @@ class _PaymentState extends State<Payment> {
                       children: [
                         Column(
                           children: [
-                            Text(
+                            const Text(
                               "Expire Date",
                               style:
                                   TextStyle(fontSize: 18, color: Colors.blue),
@@ -138,8 +139,8 @@ class _PaymentState extends State<Payment> {
                               defaultPinTheme: PinTheme(
                                 width: 35,
                                 height: 35,
-                                textStyle:
-                                    TextStyle(fontSize: 16, color: Colors.blue),
+                                textStyle: const TextStyle(
+                                    fontSize: 16, color: Colors.blue),
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(6),
@@ -152,7 +153,7 @@ class _PaymentState extends State<Payment> {
                         ),
                         Column(
                           children: [
-                            Text(
+                            const Text(
                               "CVV",
                               style:
                                   TextStyle(fontSize: 18, color: Colors.blue),
@@ -162,13 +163,11 @@ class _PaymentState extends State<Payment> {
                             ),
                             Pinput(
                               controller: cvcController,
-                              pinputAutovalidateMode:
-                                  PinputAutovalidateMode.onSubmit,
                               length: 3,
                               defaultPinTheme: PinTheme(
                                 width: 35,
                                 height: 35,
-                                textStyle: TextStyle(
+                                textStyle: const TextStyle(
                                     fontSize: 18, color: Colors.black),
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.black),

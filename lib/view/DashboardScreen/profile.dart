@@ -24,9 +24,17 @@ class Profile extends StatelessWidget {
                 height: h * 0.10,
               ),
               Obx(() => Text(
+                    profileController.name.value,
+                    style: const TextStyle(
+                      color: Colors.black45,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.0,
+                    ),
+                  )),
+              Obx(() => Text(
                     profileController.email.value,
                     style: const TextStyle(
-                      color: Colors.black,
+                      color: Colors.black45,
                       fontWeight: FontWeight.w400,
                       fontSize: 16.0,
                     ),
