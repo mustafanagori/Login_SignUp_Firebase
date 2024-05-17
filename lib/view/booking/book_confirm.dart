@@ -1,7 +1,8 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:signup_login/view/payment.dart';
+import 'package:signup_login/controller/booksolt_controller.dart';
+import 'package:signup_login/view/navigation.dart';
 
 class BookConfirm extends StatefulWidget {
   const BookConfirm({super.key});
@@ -11,6 +12,8 @@ class BookConfirm extends StatefulWidget {
 }
 
 class _BookConfirmState extends State<BookConfirm> {
+  final BookController bookController = Get.put(BookController());
+
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -35,7 +38,7 @@ class _BookConfirmState extends State<BookConfirm> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: h * 0.35,
+              height: h * 0.4,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
@@ -65,10 +68,12 @@ class _BookConfirmState extends State<BookConfirm> {
                         ),
                         Column(
                           children: [
-                            Text(
-                              "volvo Xc40",
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w500),
+                            Obx(
+                              () => Text(
+                                bookController.vehicleModelvar.value,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
                             ),
                             Text(
                               "4 Wheeler",
@@ -92,113 +97,123 @@ class _BookConfirmState extends State<BookConfirm> {
                     dashGapLength: 4.0,
                   ),
                   Expanded(
-                      child: Container(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      child: Obx(
+                        () => Column(
                           children: [
-                            Text(
-                              "Date",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Date",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  bookController.selectedDate.value != null
+                                      ? '${bookController.selectedDate.value!.day}-${bookController.selectedDate.value!.month}-${bookController.selectedDate.value!.year}'
+                                      : 'No date selected',
+                                  style: TextStyle(color: Colors.black54),
+                                ),
+                              ],
                             ),
-                            Text(
-                              "12 Dec 2024",
-                              style: TextStyle(color: Colors.black54),
+                            SizedBox(
+                              height: h * 0.01,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Slot Time",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  bookController.selectedTime.value != null
+                                      ? bookController.selectedTime.value!
+                                          .format(context)
+                                      : 'No time selected',
+                                  style: TextStyle(color: Colors.black54),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: h * 0.01,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Connection Type",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  bookController.connectionTypevar.value,
+                                  style: TextStyle(color: Colors.black54),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: h * 0.01,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Charger Type",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  bookController.chargerTypevar.value,
+                                  style: TextStyle(color: Colors.black54),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: h * 0.01,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Price",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "\$ ${bookController.price.value} kw",
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: h * 0.01,
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: h * 0.01,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Slot Time",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "6:00 am",
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: h * 0.01,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Connetion Type",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "CCS4",
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: h * 0.01,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Battery",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "12 KW",
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: h * 0.01,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Price",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "\$ 0.04/kw",
-                              style: TextStyle(
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: h * 0.01,
-                        ),
-                      ],
+                      ),
                     ),
-                  )),
+                  ),
                 ],
               ),
             ),
             SizedBox(
               height: h * 0.05,
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "Total Pay ",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                 ),
-                Text(
-                  "\$100",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 20,
+                Obx(
+                  () => Text(
+                    "\$ ${bookController.price.value} kw",
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
               ],
@@ -219,7 +234,9 @@ class _BookConfirmState extends State<BookConfirm> {
                     backgroundColor: Colors.blue,
                   ),
                   onPressed: () {
-                    Get.to(const Payment());
+                    bookController.clearAll();
+                    Get.snackbar("Successfully", "Slot booked successfully");
+                    Get.to(() => Navigation());
                   },
                   child: const Text(
                     "Make Payment",

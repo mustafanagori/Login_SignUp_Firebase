@@ -38,7 +38,7 @@ class FavrouiteStationCard extends StatelessWidget {
         },
         child: Container(
           padding: const EdgeInsets.all(10),
-          height: h * 0.17,
+          height: h * 0.18,
           width: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -79,13 +79,13 @@ class FavrouiteStationCard extends StatelessWidget {
                     Text(
                       stationName,
                       style: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w700),
+                          fontSize: 14, fontWeight: FontWeight.w700),
                     ),
                     //station address
                     const Text(
                       maxLines: 2,
                       "B 420 Broom charging staion, New york NY 0031",
-                      style: TextStyle(fontSize: 13, color: Colors.black54),
+                      style: TextStyle(fontSize: 12, color: Colors.black54),
                     ),
                     // row -> time , location and rating
                     const Row(
@@ -95,7 +95,7 @@ class FavrouiteStationCard extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.lock_clock_rounded,
-                              size: 18,
+                              size: 15,
                             ),
                             Text(" 27*7hr"),
                           ],
@@ -104,7 +104,7 @@ class FavrouiteStationCard extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.location_pin,
-                              size: 18,
+                              size: 15,
                             ),
                             Text("2.5 Km"),
                           ],
@@ -114,7 +114,7 @@ class FavrouiteStationCard extends StatelessWidget {
                             Icon(
                               Icons.star,
                               color: Colors.blue,
-                              size: 18,
+                              size: 15,
                             ),
                             Text("4.5"),
                           ],
@@ -132,12 +132,14 @@ class FavrouiteStationCard extends StatelessWidget {
                             Text(
                               "Connection",
                               style: TextStyle(
+                                fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                             Text(
                               "8 Point",
                               style: TextStyle(
+                                fontSize: 12,
                                 color: Colors.black54,
                               ),
                             ),
@@ -156,8 +158,9 @@ class FavrouiteStationCard extends StatelessWidget {
                             ),
                             onPressed: () {},
                             child: const Text(
-                              "Get direction",
+                              "Get Direction",
                               style: TextStyle(
+                                fontSize: 13,
                                 color: Colors.white,
                               ),
                             ),

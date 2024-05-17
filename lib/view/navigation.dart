@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/controller/navigation_controller.dart';
 import 'package:signup_login/view/DashboardScreen/Enroute.dart';
+import 'package:signup_login/view/DashboardScreen/booking.dart';
 import 'package:signup_login/view/DashboardScreen/favourite.dart';
 import 'package:signup_login/view/DashboardScreen/profile.dart';
-import 'package:signup_login/view/DashboardScreen/booking.dart';
 
 class Navigation extends StatefulWidget {
   Navigation({super.key});
@@ -38,11 +38,9 @@ class _NavigationState extends State<Navigation> {
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
-            // color: theme
-            //     .colorScheme.primary,
-            borderRadius: BorderRadius.circular(2),
+            borderRadius: BorderRadius.circular(15),
           ),
-          margin: const EdgeInsets.all(10),
+          margin: const EdgeInsets.all(6),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.white,

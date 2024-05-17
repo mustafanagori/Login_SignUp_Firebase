@@ -9,14 +9,7 @@ import 'package:signup_login/compnent/otherWidget/SocialButton.dart';
 
 import '../../controller/login_controller.dart';
 
-class Wellcome extends StatefulWidget {
-  const Wellcome({Key? key}) : super(key: key);
-
-  @override
-  State<Wellcome> createState() => _WellcomeState();
-}
-
-class _WellcomeState extends State<Wellcome> {
+class Wellcome extends StatelessWidget {
   final LoginController loginController = Get.put(LoginController());
 
   @override
@@ -91,8 +84,8 @@ class _WellcomeState extends State<Wellcome> {
                                         borderSide: BorderSide.none,
                                       ),
                                       filled: true,
-                                      fillColor:
-                                          Color.fromARGB(255, 234, 238, 237),
+                                      fillColor: const Color.fromARGB(
+                                          255, 234, 238, 237),
                                       hintText: "Email",
                                       prefixIcon: Icon(
                                         Icons.email,

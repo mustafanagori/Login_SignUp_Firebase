@@ -28,7 +28,7 @@ class LogoutButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20)),
             ),
             onPressed: () async {
-              Get.off(() => const Wellcome());
+              Get.off(() => Wellcome());
 
               Get.snackbar("Logout", "Your are Sucessfully logout ");
             },

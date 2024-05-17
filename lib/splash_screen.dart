@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (user != null) {
       Get.off(() => Navigation());
     } else {
-      Get.off(() => const Wellcome());
+      Get.off(() => Wellcome());
     }
   }
 

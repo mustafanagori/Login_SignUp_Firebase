@@ -126,7 +126,7 @@ class StationDetails extends StatelessWidget {
                       height: h * 0.01,
                     ),
                     Container(
-                      height: h * 0.25,
+                      height: h * 0.3,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(

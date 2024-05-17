@@ -5,19 +5,21 @@ import 'package:get/get.dart';
 import 'package:signup_login/view/login_signUp/wellcome.dart';
 
 class SignupController extends GetxController {
-  //text editing controller
+  // Text editing controllers
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  // form key
-  final GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
-  // check variable for loading
+
+  // Form key
+  final GlobalKey<FormState> userRegisterFormKey = GlobalKey<FormState>();
+
+  // Loading state
   RxBool isLoadingSignUp = false.obs;
 
-  // user register function
+  // User register function
   void registerUser() async {
-    if (signupFormKey.currentState!.validate()) {
-      isLoadingSignUp.value = true; // Set loading to true
+    if (userRegisterFormKey.currentState!.validate()) {
+      isLoadingSignUp.value = true;
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
@@ -27,8 +29,7 @@ class SignupController extends GetxController {
           await saveUserDataToFirestore(FirebaseAuth.instance.currentUser!.uid);
           Get.snackbar("Success", "You are registered",
               colorText: Colors.white);
-          Get.to(() => const Wellcome());
-          clear();
+          Get.to(() => Wellcome());
         } else {
           Get.snackbar("Error", "Please sign in first",
               colorText: Colors.white);
@@ -36,8 +37,7 @@ class SignupController extends GetxController {
       } on FirebaseAuthException catch (e) {
         Get.snackbar("Error", "${e.message}", colorText: Colors.white);
       } finally {
-        isLoadingSignUp.value =
-            false; // Set loading to false after async operations
+        isLoadingSignUp.value = false;
       }
     }
   }
@@ -57,9 +57,14 @@ class SignupController extends GetxController {
     }
   }
 
-  void clear() {
+  @override
+  void dispose() {
     emailController.clear();
     passwordController.clear();
     nameController.clear();
+    emailController.dispose();
+    passwordController.dispose();
+    nameController.dispose();
+    super.dispose();
   }
 }

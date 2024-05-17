@@ -1,3 +1,4 @@
+// login_controller.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class LoginController extends GetxController {
       Get.snackbar("Alert", "No account found, please register.",
           colorText: Colors.white);
     } else {
-      Get.to(const Login());
+      Get.to(() => Login());
     }
   }
 
@@ -42,13 +43,10 @@ class LoginController extends GetxController {
         password: loginPasswordController.text,
       );
       isLoadingSignIn.value = false;
-      clear();
       Get.off(() => Navigation());
     } on FirebaseAuthException catch (e) {
       isLoadingSignIn.value = false;
-      if (e.code == 'wrong-password') {
-        Get.snackbar("Alert", "Wrong password");
-      }
+      Get.snackbar("Alert", "Login failed: ${e.message}");
     }
   }
 
@@ -68,8 +66,12 @@ class LoginController extends GetxController {
   }
 
   // clear the text fields
-  void clear() {
+  @override
+  void dispose() {
     loginEmailController.clear();
     loginPasswordController.clear();
+    loginEmailController.dispose();
+    loginPasswordController.dispose();
+    super.dispose();
   }
 }

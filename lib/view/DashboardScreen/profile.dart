@@ -105,7 +105,7 @@ class Profile extends StatelessWidget {
                           child: const Text(
                             "Logout",
                             style: TextStyle(
-                              fontSize: 19,
+                              fontSize: 16,
                               color: Colors.white,
                               fontWeight: FontWeight.w400,
                             ),
@@ -185,11 +185,11 @@ class Tile extends StatelessWidget {
     return ListTile(
       title: Text(
         text,
-        style: const TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black, fontSize: 14),
       ),
       leading: Icon(
         icon1,
-        size: 22,
+        size: 18,
         color: Colors.blue,
       ),
       trailing: Icon(

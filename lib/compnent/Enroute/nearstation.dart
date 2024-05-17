@@ -166,7 +166,7 @@ class NearStation extends StatelessWidget {
                         ],
                       ),
                       SizedBox(
-                        width: w * 0.25,
+                        width: w * 0.22,
                         height: h * 0.035,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -179,9 +179,9 @@ class NearStation extends StatelessWidget {
                             Get.to(() => StationDetails());
                           },
                           child: const Text(
-                            "Direction",
+                            "book",
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 13,
                               color: Colors.white,
                             ),
                           ),

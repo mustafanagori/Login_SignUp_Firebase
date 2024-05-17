@@ -5,14 +5,7 @@ import 'package:get/get.dart';
 import 'package:signup_login/compnent/otherWidget/CustomButton.dart';
 import 'package:signup_login/controller/signup_controller.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
-
-  @override
-  State<SignUp> createState() => _SignUpState();
-}
-
-class _SignUpState extends State<SignUp> {
+class SignUp extends StatelessWidget {
   final SignupController signupController = Get.put(SignupController());
   bool _isObscure = true;
 
@@ -43,12 +36,15 @@ class _SignUpState extends State<SignUp> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: h * 0.2),
-                    const Text(
-                      "Register Now !",
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                    Align(
+                      alignment: Alignment.center,
+                      child: const Text(
+                        "Register Now",
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -68,7 +64,7 @@ class _SignUpState extends State<SignUp> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 20.0),
                             child: Form(
-                              key: signupController.signupFormKey,
+                              key: signupController.userRegisterFormKey,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -183,9 +179,7 @@ class _SignUpState extends State<SignUp> {
                                                 size: 20,
                                               ),
                                               onPressed: () {
-                                                setState(() {
-                                                  _isObscure = !_isObscure;
-                                                });
+                                                _isObscure = !_isObscure;
                                               },
                                             ),
                                           ),
@@ -207,7 +201,7 @@ class _SignUpState extends State<SignUp> {
                                     "By selecting Agree and continue below,",
                                     style: TextStyle(
                                       letterSpacing: 1.0,
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       color: Colors.white,
                                     ),
                                   ),
@@ -225,13 +219,13 @@ class _SignUpState extends State<SignUp> {
                                       Text(
                                         "Terms of Service and Privacy Policy",
                                         style: TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           color: Colors.green.shade200,
                                         ),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: h * 0.04),
+                                  SizedBox(height: h * 0.06),
                                   Obx(
                                     () => signupController.isLoadingSignUp.value
                                         ? const Center(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:signup_login/compnent/book_slot/mychip.dart';
+import 'package:signup_login/controller/booksolt_controller.dart';
 import 'package:signup_login/view/booking/book_confirm.dart';
 
 class BookSlot extends StatefulWidget {
@@ -11,6 +11,7 @@ class BookSlot extends StatefulWidget {
 }
 
 class _BookSlotState extends State<BookSlot> {
+  final BookController _bookSlotController = Get.put(BookController());
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -25,213 +26,128 @@ class _BookSlotState extends State<BookSlot> {
           icon: const Icon(Icons.arrow_back_ios),
         ),
         title: const Text("Book Slot"),
+        actions: [
+          TextButton(
+              onPressed: () {
+                _bookSlotController.clearAll();
+              },
+              child: Text(
+                "Clear",
+                style: TextStyle(fontSize: 16, color: Colors.black),
+                selectionColor: Colors.blue,
+              ))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Column(
-          children: [
-            const Text(
-              "Vehicle Type",
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(
-              height: h * 0.03,
-            ),
-            GestureDetector(
-              onTap: () => vehicleType(context),
-              child: SelectionBox(
-                text: '4 Wheeler',
+        child: Obx(
+          () => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: h * 0.1,
               ),
-            ),
-            SizedBox(
-              height: h * 0.03,
-            ),
-            GestureDetector(
-              onTap: () => showVehicleModel(context),
-              child: SelectionBox(
-                text: 'Select your Vehicle model',
+              GestureDetector(
+                onTap: () => _bookSlotController.showVehicleModel(context),
+                child: SelectionBox(
+                  text: '${_bookSlotController.vehicleModelvar}',
+                ),
               ),
-            ),
-            SizedBox(
-              height: h * 0.03,
-            ),
-            GestureDetector(
-              onTap: () => vehicleType(context),
-              child: SelectionBox(
-                text: 'Select your connection Type',
+              SizedBox(
+                height: h * 0.03,
               ),
-            ),
-            SizedBox(
-              height: h * 0.03,
-            ),
-            GestureDetector(
-              onTap: () => showdate(context),
-              child: SelectionBox(
-                text: 'Select Date',
+              GestureDetector(
+                onTap: () => _bookSlotController.connectionType(context),
+                child: SelectionBox(
+                  text: '${_bookSlotController.connectionTypevar}',
+                ),
               ),
-            ),
-            SizedBox(
-              height: h * 0.03,
-            ),
-            GestureDetector(
-              onTap: () => showtime(context),
-              child: SelectionBox(
-                text: 'Select Time',
+              SizedBox(
+                height: h * 0.03,
               ),
-            ),
-            SizedBox(
-              height: h * 0.03,
-            ),
-            GestureDetector(
-              onTap: () => chargerType(context),
-              child: const SelectionBox(
-                text: 'Charger Type',
+              GestureDetector(
+                onTap: () => _bookSlotController.showTime(context),
+                child: SelectionBox(
+                  text: _bookSlotController.selectedTime.value != null
+                      ? _bookSlotController.selectedTime.value!.format(context)
+                      : 'No time selected',
+                ),
               ),
-            ),
-            Spacer(),
-            Padding(
-              padding: EdgeInsets.only(bottom: h * 0.02),
-              child: SizedBox(
-                width: double.infinity,
-                height: h * 0.06,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+              SizedBox(
+                height: h * 0.03,
+              ),
+              GestureDetector(
+                onTap: () => _bookSlotController.showDate(context),
+                child: SelectionBox(
+                  text: _bookSlotController.selectedDate.value != null
+                      ? '${_bookSlotController.selectedDate.value!.day}-${_bookSlotController.selectedDate.value!.month}-${_bookSlotController.selectedDate.value!.year}'
+                      : 'No date selected',
+                ),
+              ),
+              SizedBox(
+                height: h * 0.03,
+              ),
+              GestureDetector(
+                onTap: () => _bookSlotController.chargerType(context),
+                child: SelectionBox(
+                  text: '${_bookSlotController.chargerTypevar}',
+                ),
+              ),
+              SizedBox(
+                height: h * 0.03,
+              ),
+              GestureDetector(
+                // onTap: () => _bookSlotController.chargerType(context),
+                child: SelectionBox(
+                  text: '${_bookSlotController.price}',
+                ),
+              ),
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.only(bottom: h * 0.02),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: h * 0.06,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      backgroundColor: Colors.blue,
                     ),
-                    backgroundColor: Colors.blue,
-                  ),
-                  onPressed: () {
-                    Get.to(BookConfirm());
-                  },
-                  child: const Text(
-                    "Continue",
-                    style: TextStyle(
-                      color: Colors.white,
+                    onPressed: () {
+                      _bookSlotController.printAll();
+                      if (_bookSlotController.selectedTime.value != null &&
+                          _bookSlotController.selectedDate.value != null &&
+                          _bookSlotController.vehicleModelvar.value !=
+                              'Select Vehicle Model' &&
+                          _bookSlotController.connectionTypevar.value !=
+                              'Select Connection Type' &&
+                          _bookSlotController.chargerTypevar.value !=
+                              'Select Charger Type') {
+                        Get.to(const BookConfirm());
+                      } else {
+                        Get.snackbar(
+                          'Missing Fields',
+                          'Please select all fields',
+                        );
+                      }
+                    },
+                    child: const Text(
+                      "Continue",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
-}
-
-// bottom sheet for vehicle
-void vehicleType(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (context) {
-      var h = MediaQuery.of(context).size.height;
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16.0),
-        height: MediaQuery.of(context).size.height * 0.15,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Select Vehicle Type',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: h * 0.02,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                MyChip(text: "3 wheeler"),
-                MyChip(text: "3 wheeler"),
-                MyChip(text: "3 wheeler"),
-              ],
-            )
-          ],
-        ),
-      );
-    },
-  );
-}
-
-// charger type
-void chargerType(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (context) {
-      var h = MediaQuery.of(context).size.height;
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16.0),
-        height: MediaQuery.of(context).size.height * 0.15,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Vehicle Charger Type',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: h * 0.02,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                MyChip(text: "CSS2"),
-                MyChip(text: "CS567"),
-                MyChip(text: "CV25"),
-              ],
-            )
-          ],
-        ),
-      );
-    },
-  );
-}
-
-void showVehicleModel(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (context) {
-      var h = MediaQuery.of(context).size.height;
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(6.0),
-        height: MediaQuery.of(context).size.height * 0.25,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Vehicle Model',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: h * 0.02,
-            ),
-            Flexible(
-              child: GridView.count(
-                mainAxisSpacing: 0,
-                crossAxisSpacing: 1,
-                crossAxisCount: 4,
-                children: const [
-                  MyChip(text: "BMW"),
-                  MyChip(text: "Civic"),
-                  MyChip(text: "City"),
-                  MyChip(text: "Corolla"),
-                  MyChip(text: "Aqua"),
-                  MyChip(text: "Vitz"),
-                  MyChip(text: "Swift"),
-                  MyChip(text: "Aqua"),
-                  MyChip(text: "Vitz"),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
 }
 
 class SelectionBox extends StatelessWidget {
@@ -275,106 +191,4 @@ class SelectionBox extends StatelessWidget {
       ),
     );
   }
-}
-
-void vehicleModel(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (context) {
-      var h = MediaQuery.of(context).size.height;
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16.0),
-        height: MediaQuery.of(context).size.height * 0.15,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Select Vehicle Model',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: h * 0.02,
-            ),
-            ListView(
-              children: [
-                MyChip(text: "3 wheeler"),
-                MyChip(text: "3 wheeler"),
-                MyChip(text: "3 wheeler"),
-              ],
-            )
-          ],
-        ),
-      );
-    },
-  );
-}
-
-//time
-void showtime(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16.0),
-        height: MediaQuery.of(context).size.height * 0.15,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Select Time',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                MyChip(text: "6:00"),
-                MyChip(text: "8:00"),
-                MyChip(text: "9:00"),
-              ],
-            )
-          ],
-        ),
-      );
-    },
-  );
-}
-
-// show date
-void showdate(BuildContext context) {
-  print("date");
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16.0),
-        height: MediaQuery.of(context).size.height * 0.15,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Select Date',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                MyChip(text: "12 May"),
-                MyChip(text: "16 May"),
-                MyChip(text: "18 May"),
-              ],
-            )
-          ],
-        ),
-      );
-    },
-  );
 }

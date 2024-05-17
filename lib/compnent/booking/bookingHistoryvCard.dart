@@ -78,7 +78,7 @@ class BookingHistoryCard extends StatelessWidget {
                     children: [
                       //botton 1
                       SizedBox(
-                        width: w * 0.3,
+                        width: w * 0.35,
                         height: h * 0.04,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -91,6 +91,7 @@ class BookingHistoryCard extends StatelessWidget {
                           child: const Text(
                             "Go details",
                             style: TextStyle(
+                              fontSize: 13,
                               color: Colors.white,
                             ),
                           ),
