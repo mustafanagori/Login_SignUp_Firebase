@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:signup_login/compnent/Enroute/nearstation.dart';
 import 'package:signup_login/controller/enroute_Controller.dart';
+import 'package:signup_login/controller/stationContoller.dart';
 
 class Enroute extends StatefulWidget {
   const Enroute({Key? key}) : super(key: key);
@@ -17,12 +18,13 @@ class Enroute extends StatefulWidget {
 
 class _EnrouteState extends State<Enroute> {
   EnrouteController enrouteController = Get.put(EnrouteController());
+  final StationController stationController = Get.put(StationController());
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
   static const CameraPosition _currentPosition = CameraPosition(
-    target: LatLng(24.881501200552584, 67.06379402729937),
-    zoom: 14.4746,
+    target: LatLng(24.857286878376392, 67.01812779063066),
+    zoom: 30,
   );
   List<Marker> _marker = [];
   final List<Marker> _list = const [
@@ -42,7 +44,8 @@ class _EnrouteState extends State<Enroute> {
   @override
   void initState() {
     super.initState();
-    loadCurrentLocation();
+    _goToGivenPosition();
+    //loadCurrentLocation();
     _marker.addAll(_list);
   }
 
@@ -68,24 +71,21 @@ class _EnrouteState extends State<Enroute> {
                   markers: Set<Marker>.of(_marker),
                 ),
                 Positioned(
-                  top: 0,
-                  right: 0,
+                  top: 500,
+                  right: 20,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(40),
                     ),
-                    child: TextButton.icon(
+                    child: IconButton(
                       onPressed: () {
                         _goToGivenPosition();
                       },
                       icon: const Icon(
-                        Icons.location_city_rounded,
-                        color: Colors.white,
-                      ),
-                      label: const Text(
-                        "Location",
-                        style: TextStyle(color: Colors.white),
+                        Icons.my_location_rounded,
+                        color: Colors.black54,
+                        size: 30,
                       ),
                     ),
                   ),
@@ -96,23 +96,23 @@ class _EnrouteState extends State<Enroute> {
                     height: h * 0.2,
                     width: w,
                     child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: h * 0.005,
-                          horizontal: w * 0.01,
-                        ),
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: enrouteController.nearStation.length,
-                          itemBuilder: (context, index) {
-                            final station =
-                                enrouteController.nearStation[index];
-                            return NearStation(
-                              path: station['path'] ?? '',
-                              stationName: station['name'] ?? 'Unknown',
-                              status: station['status'] ?? 'Unknown',
-                            );
-                          },
-                        )),
+                      padding: EdgeInsets.symmetric(
+                        vertical: h * 0.005,
+                        horizontal: w * 0.01,
+                      ),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: enrouteController.nearStation.length,
+                        itemBuilder: (context, index) {
+                          final station = enrouteController.nearStation[index];
+                          return NearStation(
+                            path: station['path'] ?? '',
+                            stationName: station['name'] ?? 'Unknown',
+                            status: station['status'] ?? 'Unknown',
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -122,14 +122,49 @@ class _EnrouteState extends State<Enroute> {
       ),
     );
   }
+  // people select and prefer to live in a big city how ever there are many problem to living in a big city
+  // Obx(
+  //                       () {
+  //                         if (stationController.stations.isEmpty) {
+  //                           return const Center(
+  //                               child: CircularProgressIndicator());
+  //                         } else {
+  //                           return ListView.builder(
+  //                             itemCount: stationController.stations.length,
+  //                             itemBuilder: (context, index) {
+  //                               Station station =
+  //                                   stationController.stations[index];
+  //                               return NearStation(
+  //                                 path: station.image,
+  //                                 stationName: station.name,
+  //                                 status: station.status,
+  //                               );
+  //                             },
+  //                           );
+  //                         }
+  //                       },
+  //                     ),
+  //
+  //     ListView.builder(
+  //   scrollDirection: Axis.horizontal,
+  //   itemCount: enrouteController.nearStation.length,
+  //   itemBuilder: (context, index) {
+  //     final station = enrouteController.nearStation[index];
+  //     return NearStation(
+  //       path: station['path'] ?? '',
+  //       stationName: station['name'] ?? 'Unknown',
+  //       status: station['status'] ?? 'Unknown',
+  //     );
+  //   },
+  // ),
 
   Future<void> _goToGivenPosition() async {
     final GoogleMapController controller = await _controller.future;
     await controller.animateCamera(
       CameraUpdate.newCameraPosition(
         const CameraPosition(
-          target: LatLng(24.863081088941897, 67.02858036623955),
-          zoom: 30,
+          target: LatLng(24.87272715408785, 67.0130402530065),
+          zoom: 15,
         ),
       ),
     );
@@ -156,14 +191,14 @@ class _EnrouteState extends State<Enroute> {
 
       _marker.add(
         Marker(
-          markerId: MarkerId('6'),
+          markerId: const MarkerId('6'),
           position: LatLng(value.latitude, value.longitude),
-          infoWindow: InfoWindow(title: "current location"),
+          infoWindow: const InfoWindow(title: "current location"),
         ),
       );
 
       CameraPosition cameraPosition = CameraPosition(
-        zoom: 9,
+        zoom: 15,
         target: LatLng(value.latitude, value.longitude),
       );
 

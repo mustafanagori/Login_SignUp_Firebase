@@ -63,7 +63,6 @@ class BookController extends GetxController {
       Get.snackbar(
         'Missing Fields',
         'Please select all fields',
-        snackPosition: SnackPosition.BOTTOM,
       );
       return;
     }
@@ -86,7 +85,6 @@ class BookController extends GetxController {
       Get.snackbar(
         'Booking Failed',
         'Failed to book slot. Please try again.',
-        snackPosition: SnackPosition.BOTTOM,
       );
     }
   }
