@@ -233,8 +233,10 @@ class _BookConfirmState extends State<BookConfirm> {
                     ),
                     backgroundColor: Colors.blue,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    await bookController.bookSlot();
                     bookController.clearAll();
+
                     Get.snackbar("Successfully", "Slot booked successfully");
                     Get.to(() => Navigation());
                   },

@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/compnent/book_slot/mychip.dart';
+import 'package:signup_login/model/booking_model.dart';
+import 'package:signup_login/view/booking/book_confirm.dart';
 
 class BookController extends GetxController {
   var selectedTime = Rx<TimeOfDay?>(null);
@@ -25,6 +29,66 @@ class BookController extends GetxController {
     connectionTypevar.value = 'Select Connection Type';
     chargerTypevar.value = 'Select Charger Type';
     price.value = 0.0;
+  }
+
+  // store booking detail on firebase firestore:
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  Future<void> createBooking(BookingModel booking) async {
+    try {
+      DocumentReference docRef =
+          await _db.collection('bookings').add(booking.toMap());
+      await _db.collection('bookings').doc(docRef.id).update({'id': docRef.id});
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<void> bookSlot() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      Get.snackbar(
+        'Authentication Error',
+        'No user is currently signed in.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+    if (selectedDate.value == null ||
+        selectedTime.value == null ||
+        vehicleModelvar.value == "Select Vehicle Model" ||
+        connectionTypevar.value == "Select Connection Type" ||
+        chargerTypevar.value == "Select Charger Type") {
+      Get.snackbar(
+        'Missing Fields',
+        'Please select all fields',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    BookingModel booking = BookingModel(
+      userId: user.uid,
+      vehicleModel: vehicleModelvar.value,
+      connectionType: connectionTypevar.value,
+      date: selectedDate.value!,
+      time: selectedTime.value!,
+      chargerType: chargerTypevar.value,
+      status: 'pending',
+      price: double.parse(price.value.toString()),
+    );
+
+    try {
+      await createBooking(booking);
+      Get.to(const BookConfirm());
+    } catch (e) {
+      Get.snackbar(
+        'Booking Failed',
+        'Failed to book slot. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 
   // Method to update the price

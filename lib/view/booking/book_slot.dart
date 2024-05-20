@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:signup_login/controller/booksolt_controller.dart';
 import 'package:signup_login/view/booking/book_confirm.dart';
 
@@ -80,7 +81,8 @@ class _BookSlotState extends State<BookSlot> {
                 onTap: () => _bookSlotController.showDate(context),
                 child: SelectionBox(
                   text: _bookSlotController.selectedDate.value != null
-                      ? '${_bookSlotController.selectedDate.value!.day}-${_bookSlotController.selectedDate.value!.month}-${_bookSlotController.selectedDate.value!.year}'
+                      ? DateFormat('yyyy-MM-dd')
+                          .format(_bookSlotController.selectedDate.value!)
                       : 'No date selected',
                 ),
               ),

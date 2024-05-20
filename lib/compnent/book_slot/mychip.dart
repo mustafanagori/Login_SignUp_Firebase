@@ -18,7 +18,7 @@ class MyChip extends StatelessWidget {
       child: Chip(
         shape: RoundedRectangleBorder(
           side: const BorderSide(color: Colors.blue, width: 1),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(120),
         ),
         label: Text(text),
       ),
