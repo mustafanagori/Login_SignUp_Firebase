@@ -53,6 +53,14 @@ class _EnrouteState extends State<Enroute> {
                       stationController.controller.complete(controller);
                     },
                     markers: Set<Marker>.of(stationController.marker),
+                    polylines: {
+                      Polyline(
+                        polylineId: const PolylineId('route'),
+                        points: stationController.polylineCoordinates,
+                        color: Colors.blue,
+                        width: 5,
+                      ),
+                    },
                   );
                 }),
                 Positioned(
@@ -117,8 +125,6 @@ class _EnrouteState extends State<Enroute> {
                               itemBuilder: (context, index) {
                                 Station station =
                                     stationController.stations[index];
-                                print(station.map.latitude);
-                                print(station.map.longitude);
                                 return NearStation(
                                   path: station.image,
                                   stationName: station.name,
@@ -137,7 +143,35 @@ class _EnrouteState extends State<Enroute> {
                       ),
                     ),
                   ),
-                )
+                ),
+                Positioned(
+                  top: h * 0.1,
+                  left: w * 0.05,
+                  child: Obx(() {
+                    if (stationController.distance.value.isEmpty) {
+                      return const SizedBox();
+                    }
+                    return Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Distance: ${stationController.distance.value}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            'Duration: ${stationController.duration.value}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
               ],
             ),
           ),
