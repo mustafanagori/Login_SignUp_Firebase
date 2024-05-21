@@ -4,7 +4,7 @@ class Station {
   final String id;
   final String name;
   final String address;
-  final String connectionPoint;
+  final int connectionPoint;
   final String image;
   final GeoPoint map;
   final int rating;
@@ -25,16 +25,21 @@ class Station {
 
   factory Station.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
     return Station(
       id: doc.id,
-      name: data['name'] ?? '',
-      address: data['address'] ?? '',
-      connectionPoint: data['connectionPoint'] ?? '',
-      image: data['image'] ?? '',
-      map: data['map'] ?? GeoPoint(0, 0),
-      rating: (data['rating'] ?? 0).toInt(), // Convert to integer
-      serviceTime: data['serviceTime'] ?? '',
-      status: data['status'] ?? '',
+      name: data['name'] as String? ?? '',
+      address: data['address'] as String? ?? '',
+      connectionPoint: data['connectionPoint'] is int
+          ? data['connectionPoint'] as int
+          : int.parse(data['connectionPoint'].toString()),
+      image: data['image'] as String? ?? '',
+      map: data['map'] as GeoPoint? ?? GeoPoint(0, 0),
+      rating: data['rating'] is int
+          ? data['rating'] as int
+          : int.parse(data['rating'].toString()),
+      serviceTime: data['serviceTime'] as String? ?? '',
+      status: data['status'] as String? ?? '',
     );
   }
 }
