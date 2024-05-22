@@ -14,7 +14,7 @@ class Enroute extends StatefulWidget {
 }
 
 class _EnrouteState extends State<Enroute> {
-  final StationController stationController = Get.put(StationController());
+  final StationController stationController = Get.find();
 
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(24.857286878376392, 67.01812779063066),

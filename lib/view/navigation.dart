@@ -14,7 +14,7 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  HomeNavigation bottomNavigationContoller = Get.put(HomeNavigation());
+  HomeNavigation bottomNavigationContoller = Get.find();
 
   @override
   Widget build(BuildContext context) {

@@ -237,8 +237,8 @@ class NearStation extends StatelessWidget {
             height: h * 0.08,
             width: w * 0.1,
             decoration: const BoxDecoration(
-              color: Colors.white, // Set the background color to white
-              shape: BoxShape.circle, // Make the container a circle
+              color: Colors.white,
+              shape: BoxShape.circle,
             ),
             child: IconButton(
               onPressed: () async {

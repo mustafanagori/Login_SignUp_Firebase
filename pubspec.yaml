@@ -42,7 +42,7 @@ dependencies:
   geolocator: ^10.1.0
   # to get the device number
   uuid: ^4.2.2 
-  http: ^1.1.2
+  http: ^1.2.1
   custom_info_window: ^1.0.1
   firebase_auth_web: ^5.11.5
   firebase_core: ^2.31.0

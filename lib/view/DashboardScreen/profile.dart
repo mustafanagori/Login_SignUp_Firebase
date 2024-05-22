@@ -6,8 +6,8 @@ import 'package:signup_login/controller/profile_controller.dart';
 class Profile extends StatelessWidget {
   Profile({Key? key}) : super(key: key);
 
-  final ProfileController profileController = Get.put(ProfileController());
-  LoginController loginController = Get.put(LoginController());
+  final ProfileController profileController = Get.find();
+  LoginController loginController = Get.find();
 
   @override
   Widget build(BuildContext context) {

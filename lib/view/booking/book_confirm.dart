@@ -12,7 +12,7 @@ class BookConfirm extends StatefulWidget {
 }
 
 class _BookConfirmState extends State<BookConfirm> {
-  final BookController bookController = Get.put(BookController());
+  final BookController bookController = Get.find();
 
   @override
   Widget build(BuildContext context) {

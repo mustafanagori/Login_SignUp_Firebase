@@ -8,7 +8,7 @@ class Favourite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FavrouiteController favrouiteController = Get.put(FavrouiteController());
+    FavrouiteController favrouiteController = Get.find();
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 

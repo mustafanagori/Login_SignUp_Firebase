@@ -12,7 +12,7 @@ class BookSlot extends StatefulWidget {
 }
 
 class _BookSlotState extends State<BookSlot> {
-  final BookController _bookSlotController = Get.put(BookController());
+  final BookController _bookSlotController = Get.find();
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;

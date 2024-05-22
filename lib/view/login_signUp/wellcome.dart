@@ -10,7 +10,7 @@ import 'package:signup_login/compnent/otherWidget/SocialButton.dart';
 import '../../controller/login_controller.dart';
 
 class Wellcome extends StatelessWidget {
-  final LoginController loginController = Get.put(LoginController());
+  final LoginController loginController = Get.find();
 
   @override
   Widget build(BuildContext context) {

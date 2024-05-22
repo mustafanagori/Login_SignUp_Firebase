@@ -8,7 +8,7 @@ class OngoingBooking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BookingController bookingController = Get.put(BookingController());
+    BookingController bookingController = Get.find();
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 

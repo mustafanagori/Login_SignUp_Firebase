@@ -6,7 +6,7 @@ import 'package:signup_login/compnent/otherWidget/CustomButton.dart';
 import 'package:signup_login/controller/signup_controller.dart';
 
 class SignUp extends StatelessWidget {
-  final SignupController signupController = Get.put(SignupController());
+  final SignupController signupController = Get.find();
   bool _isObscure = true;
 
   @override

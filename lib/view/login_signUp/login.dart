@@ -14,7 +14,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final LoginController loginController = Get.put(LoginController());
+  final LoginController loginController = Get.find();
   bool _isObscure = true;
 
   @override
