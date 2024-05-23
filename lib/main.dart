@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/controller/bookingController.dart';
+import 'package:signup_login/controller/bookingHistoryController.dart';
 import 'package:signup_login/controller/booksolt_controller.dart';
 import 'package:signup_login/controller/favrouite_controller.dart';
 import 'package:signup_login/controller/login_controller.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
     Get.put(StationController());
     Get.put(FavrouiteController());
     Get.put(ProfileController());
+    Get.put(BookingHistoryController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',

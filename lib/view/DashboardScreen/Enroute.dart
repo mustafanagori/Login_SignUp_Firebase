@@ -18,7 +18,7 @@ class _EnrouteState extends State<Enroute> {
 
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(24.857286878376392, 67.01812779063066),
-    zoom: 14, // Adjusted zoom level for better visibility
+    zoom: 15, // Adjusted zoom level for better visibility
   );
 
   User? user = FirebaseAuth.instance.currentUser;
@@ -27,7 +27,6 @@ class _EnrouteState extends State<Enroute> {
   void initState() {
     super.initState();
     stationController.fetchStations();
-    stationController.goToGivenPosition();
   }
 
   @override
@@ -42,6 +41,7 @@ class _EnrouteState extends State<Enroute> {
             flex: 4,
             child: Stack(
               children: [
+                // google map
                 Obx(() {
                   if (stationController.stations.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
@@ -63,6 +63,7 @@ class _EnrouteState extends State<Enroute> {
                     },
                   );
                 }),
+                // cuurent location
                 Positioned(
                   top: h * 0.6,
                   right: w * 0.04,
@@ -73,6 +74,7 @@ class _EnrouteState extends State<Enroute> {
                     ),
                     child: IconButton(
                       onPressed: () {
+                        stationController.polylineCoordinates.clear();
                         stationController.loadCurrentLocation();
                       },
                       icon: const Icon(
@@ -83,26 +85,8 @@ class _EnrouteState extends State<Enroute> {
                     ),
                   ),
                 ),
-                Positioned(
-                  top: h * 0.53,
-                  right: w * 0.04,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        stationController.fetchStations();
-                      },
-                      icon: const Icon(
-                        Icons.refresh,
-                        color: Colors.black54,
-                        size: 25,
-                      ),
-                    ),
-                  ),
-                ),
+
+                // list of station
                 Positioned(
                   bottom: 0,
                   child: SizedBox(
@@ -144,8 +128,9 @@ class _EnrouteState extends State<Enroute> {
                     ),
                   ),
                 ),
+
                 Positioned(
-                  top: h * 0.1,
+                  top: h * 0.2,
                   left: w * 0.05,
                   child: Obx(() {
                     if (stationController.distance.value.isEmpty) {

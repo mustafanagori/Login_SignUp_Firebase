@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui' as ui;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -27,7 +30,85 @@ class StationController extends GetxController {
   void onInit() {
     super.onInit();
     fetchStations();
-    goToGivenPosition();
+    loadCurrentLocation();
+  }
+
+  // load the current user location
+  loadCurrentLocation() async {
+    try {
+      Position value = await getLocationPermission();
+      BitmapDescriptor customIcon = await getResizedIcon(
+        'assets/pin.png',
+        12,
+      );
+      marker.add(
+        Marker(
+          markerId: const MarkerId('Your Location'),
+          position: LatLng(value.latitude, value.longitude),
+          infoWindow: const InfoWindow(title: "Your Location"),
+          icon: customIcon,
+        ),
+      );
+      CameraPosition cameraPosition = CameraPosition(
+        zoom: 15,
+        target: LatLng(value.latitude, value.longitude),
+      );
+
+      final GoogleMapController mapController = await controller.future;
+      mapController
+          .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    } catch (e) {
+      print("Error fetching location: $e");
+      Get.snackbar("Alert", "Unable to get currecnt location");
+    }
+  }
+
+  Future<BitmapDescriptor> getResizedIcon(
+      String assetPath, double scale) async {
+    ByteData data = await rootBundle.load(assetPath);
+    ui.Codec codec = await ui.instantiateImageCodec(
+      data.buffer.asUint8List(),
+      targetWidth: (scale * 12).toInt(), // Adjust the scale to your needs
+    );
+    ui.FrameInfo fi = await codec.getNextFrame();
+    final Uint8List resizedData =
+        (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+            .buffer
+            .asUint8List();
+    return BitmapDescriptor.fromBytes(resizedData);
+  }
+
+  Future<void> drawPolyline(double endLat, double endLng) async {
+    print("making polyline line ");
+    try {
+      Position currentPosition = await getLocationPermission();
+      PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
+        MyGoogleApiKey.googleAPIKey,
+        PointLatLng(currentPosition.latitude, currentPosition.longitude),
+        PointLatLng(endLat, endLng),
+      );
+
+      if (result.points.isNotEmpty) {
+        // Clear previous polylines
+        polylineCoordinates.clear();
+
+        // Add new polyline coordinates
+        result.points.forEach((PointLatLng point) {
+          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        });
+
+        final GoogleMapController mapController = await controller.future;
+        CameraPosition cameraPosition = CameraPosition(
+          zoom: 12, // Set zoom level to 12
+          target: LatLng(currentPosition.latitude, currentPosition.longitude),
+        );
+        mapController
+            .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      }
+    } catch (e) {
+      Get.snackbar("Alert", "Invalid Route Your so far from your location");
+      print('Error drawing polyline: $e');
+    }
   }
 
   // fetch all station from firebase
@@ -36,16 +117,22 @@ class StationController extends GetxController {
       final snapshot =
           await FirebaseFirestore.instance.collection('stations').get();
       print("Number of documents fetched: ${snapshot.docs.length}");
+
       if (snapshot.docs.isNotEmpty) {
         stations.assignAll(
           snapshot.docs.map((doc) => Station.fromFirestore(doc)).toList(),
         );
         // Add markers for stations
         for (var station in stations) {
+          BitmapDescriptor customIcon = await getResizedIcon(
+            'assets/stationIcon.png',
+            12,
+          );
           marker.add(
             Marker(
               markerId: MarkerId(station.id),
               position: LatLng(station.map.latitude, station.map.longitude),
+              icon: customIcon,
               infoWindow: InfoWindow(
                 title: station.name,
               ),
@@ -61,21 +148,8 @@ class StationController extends GetxController {
     }
   }
 
-  // go to give postion in google map accoriding to defined cordinates
-  Future<void> goToGivenPosition() async {
-    final GoogleMapController mapController = await controller.future;
-    await mapController.animateCamera(
-      CameraUpdate.newCameraPosition(
-        const CameraPosition(
-          target: LatLng(24.87272715408785, 67.0130402530065),
-          zoom: 15,
-        ),
-      ),
-    );
-  }
-
-  // get user current location to move the map camera position
-  Future<Position> getUserCurrentLocation() async {
+  // get permission for location
+  Future<Position> getLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -102,36 +176,12 @@ class StationController extends GetxController {
     return position;
   }
 
-  // load the current user location
-  loadCurrentLocation() async {
-    try {
-      Position value = await getUserCurrentLocation();
-      print("${value.latitude}, ${value.longitude}");
-
-      marker.add(
-        Marker(
-          markerId: const MarkerId('current_location'),
-          position: LatLng(value.latitude, value.longitude),
-          infoWindow: const InfoWindow(title: "Current Location"),
-        ),
-      );
-
-      CameraPosition cameraPosition = CameraPosition(
-        zoom: 15,
-        target: LatLng(value.latitude, value.longitude),
-      );
-
-      final GoogleMapController mapController = await controller.future;
-      mapController
-          .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-    } catch (e) {
-      print("Error fetching location: $e");
-    }
-  }
-
   // Add this method to animate to a specific station
   Future<void> animateToStation(double latitude, double longitude) async {
+    // Draw polyline to the selected station
+
     final GoogleMapController mapController = await controller.future;
+
     CameraPosition cameraPosition = CameraPosition(
       zoom: 15,
       target: LatLng(latitude, longitude),
@@ -169,28 +219,59 @@ class StationController extends GetxController {
       print('Error fetching route: ${route['message']}');
     }
   }
+
+  // for live tracking
+
+  void startLiveLocationTracking() {
+    Geolocator.getPositionStream(
+      locationSettings: LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10, // Update location every 10 meters
+      ),
+    ).listen((Position position) {
+      updateCurrentLocationMarker(position);
+      updatePolyline(position);
+    });
+  }
+
+  void updateCurrentLocationMarker(Position position) {
+    marker.removeWhere((marker) => marker.markerId.value == 'Your Location');
+    marker.add(
+      Marker(
+        markerId: const MarkerId('Your Location'),
+        position: LatLng(position.latitude, position.longitude),
+        infoWindow: const InfoWindow(title: "Your Location"),
+        icon: BitmapDescriptor
+            .defaultMarker, // Use default marker or a custom one
+      ),
+    );
+  }
+
+  Future<void> updatePolyline(Position position) async {
+    // Assuming you have the destination coordinates stored
+    double destinationLat = position.altitude;
+    double destinationLng = position.longitude;
+
+    PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
+      MyGoogleApiKey.googleAPIKey,
+      PointLatLng(position.latitude, position.longitude),
+      PointLatLng(destinationLat, destinationLng),
+    );
+
+    if (result.points.isNotEmpty) {
+      polylineCoordinates.clear();
+
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+
+      final GoogleMapController mapController = await controller.future;
+      CameraPosition cameraPosition = CameraPosition(
+        zoom: 15, // Keep the zoom level as needed
+        target: LatLng(position.latitude, position.longitude),
+      );
+      mapController
+          .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    }
+  }
 }
-
-  // Method to create a route and calculate distance and duration
-  //
-  // Future<void> createRoute(double startLatitude, double startLongitude,
-  //     double endLatitude, double endLongitude) async {
-  //   final GoogleMapsDirections directions =
-  //       GoogleMapsDirections(apiKey: googleAPIKey);
-  //   final DirectionsResponse response = await directions.directionsWithLocation(
-  //     Location(startLatitude, startLongitude),
-  //     Location(endLatitude, endLongitude),
-  //   );
-  //   if (response.isOkay) {
-  //     distance.value = response.routes[0].legs[0].distance.text;
-  //     duration.value = response.routes[0].legs[0].duration.text;
-  //     polylineCoordinates.clear();
-  //     PolylinePoints polylinePoints = PolylinePoints();
-  //     response.routes[0].overviewPolyline.points.forEach((point) {
-  //       polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-  //     });
-  //   } else {
-  //     print('Error creating route: ${response.errorMessage}');
-  //   }
-  // }
-

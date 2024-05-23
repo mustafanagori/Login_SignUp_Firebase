@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/controller/stationContoller.dart';
 import 'package:signup_login/view/stationDetail.dart';
@@ -38,11 +37,11 @@ class NearStation extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          padding: EdgeInsets.only(right: h * 0.02),
+          padding: EdgeInsets.only(right: h * 0.01),
           child: Container(
             padding: const EdgeInsets.all(10),
-            height: h * 0.15,
-            width: w * 0.7,
+            height: h * 0.17,
+            width: w * 0.8,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(15),
@@ -232,34 +231,52 @@ class NearStation extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: -10,
           child: Container(
             height: h * 0.08,
             width: w * 0.1,
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              onPressed: () {
+                stationController.polylineCoordinates.clear();
+                stationController.drawPolyline(latitude, longitude);
+
+                // stationController.animateToStation(latitude, longitude);
+              },
+              icon: const Icon(
+                Icons.directions,
+                color: Colors.red, // Set the icon color to red
+                size: 40,
+              ),
+            ),
+          ),
+        ),
+        // station location
+        Positioned(
+          top: -12,
+          right: 16,
+          child: Container(
+            height: h * 0.08,
+            width: w * 0.1,
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
               shape: BoxShape.circle,
             ),
             child: IconButton(
               onPressed: () async {
-                Position currentPosition =
-                    await stationController.getUserCurrentLocation();
-                // stationController.createRoute(
-                //   currentPosition.latitude,
-                //   currentPosition.longitude,
-                //   latitude,
-                //   longitude,
-                // );
+                stationController.polylineCoordinates.clear();
                 stationController.animateToStation(latitude, longitude);
               },
-              icon: Icon(
-                Icons.directions,
-                color: Colors.red, // Set the icon color to red
-                size: 30,
+              icon: const Icon(
+                Icons.my_location,
+                color: Colors.green, // Set the icon color to red
+                size: 25,
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
