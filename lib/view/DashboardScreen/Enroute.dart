@@ -60,6 +60,8 @@ class _EnrouteState extends State<Enroute> {
                         points: stationController.polylineCoordinates,
                         color: Colors.blue,
                         width: 5,
+                        visible: true,
+                        geodesic: false,
                       ),
                     },
                   );
@@ -132,9 +134,9 @@ class _EnrouteState extends State<Enroute> {
                 ),
                 // show  distace and time
                 Obx(() {
-                  if (stationController.distance.value.isEmpty ||
+                  if (stationController.distance.value.isEmpty &&
                       stationController.duration.value.isEmpty) {
-                    return SizedBox(); // Return an empty widget if distance or duration is empty
+                    return SizedBox();
                   }
                   return Container(
                     decoration: BoxDecoration(
@@ -147,16 +149,20 @@ class _EnrouteState extends State<Enroute> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
-                          'Distance: ${stationController.distance.value}',
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.white),
+                        Obx(
+                          () => Text(
+                            'Distance: ${stationController.distance.value}',
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.white),
+                          ),
                         ),
                         const SizedBox(width: 10),
-                        Text(
-                          'Duration: ${stationController.duration.value}',
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.white),
+                        Obx(
+                          () => Text(
+                            'Duration: ${stationController.duration.value}  ',
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.white),
+                          ),
                         ),
                       ],
                     ),

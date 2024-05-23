@@ -24,14 +24,45 @@ class StationController extends GetxController {
   // variable for store distance and duration to reach at location
   RxString distance = ''.obs;
   RxString duration = ''.obs;
+  // Add a boolean variable to track whether to draw polyline
+  RxBool shouldDrawPolyline = false.obs;
 
   // init function to call load the date when controller initlize
+
   @override
   void onInit() {
     super.onInit();
     fetchStations();
 
     loadCurrentLocation();
+  }
+
+  // Method to toggle polyline drawing
+  void togglePolylineDrawing() {
+    shouldDrawPolyline.value = !shouldDrawPolyline.value;
+  }
+
+  // Method to draw polyline based on boolean variable
+  void handlePolylineDrawing(double endLat, double endLng) {
+    if (shouldDrawPolyline.value) {
+      drawPolyline(endLat, endLng);
+    } else {
+      // Clear the polyline coordinates
+      polylineCoordinates.clear();
+    }
+  }
+
+  void showInfoAndStartLiveTracking() async {
+    if (polylineCoordinates.isNotEmpty) {
+      // Show distance and duration
+      // Example: Update distance and duration RxStrings here
+
+      // Start live tracking
+      startLiveLocationTracking();
+    } else {
+      // Handle case where polyline is not drawn yet
+      Get.snackbar("Alert", "Please draw a polyline first.");
+    }
   }
 
   // load the current user location
@@ -88,9 +119,12 @@ class StationController extends GetxController {
         MyGoogleApiKey.googleAPIKey,
         PointLatLng(currentPosition.latitude, currentPosition.longitude),
         PointLatLng(endLat, endLng),
+        travelMode: TravelMode.driving,
+        avoidHighways: true,
+        avoidTolls: true,
       );
-      getRoute(
-          currentPosition.altitude, currentPosition.longitude, endLat, endLng);
+      // getRoute(
+      //     currentPosition.altitude, currentPosition.longitude, endLat, endLng);
       if (result.points.isNotEmpty) {
         // Clear previous polylines
         polylineCoordinates.clear();
@@ -99,14 +133,25 @@ class StationController extends GetxController {
         result.points.forEach((PointLatLng point) {
           polylineCoordinates.add(LatLng(point.latitude, point.longitude));
         });
+        getDirections(currentPosition.latitude, currentPosition.longitude,
+            endLat, endLng);
+        print("get route call ");
+        print(currentPosition.latitude);
+        print(currentPosition.longitude);
+        print(endLat);
+        print(endLng);
 
         final GoogleMapController mapController = await controller.future;
         CameraPosition cameraPosition = CameraPosition(
-          zoom: 12, // Set zoom level to 12
+          zoom: 12,
           target: LatLng(currentPosition.latitude, currentPosition.longitude),
         );
+
         mapController
             .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+        Position position = await getLocationPermission();
+        print(position);
+        update();
       }
     } catch (e) {
       Get.snackbar("Alert", "Invalid Route Your so far from your location");
@@ -192,37 +237,83 @@ class StationController extends GetxController {
     mapController.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
-  Future<Map<String, dynamic>> getRoute(
-      double startLat, double startLng, double endLat, double endLng) async {
-    print("making route ");
+  Future<void> getDirections(double originLat, double originLng,
+      double destinationLat, double destinationLng) async {
     String url =
-        'https://api.mapbox.com/directions/v5/mapbox/driving/$startLng,$startLat;$endLng,$endLat?steps=true&geometries=geojson&access_token=${MyGoogleApiKey.googleAPIKey}';
-
+        'https://maps.googleapis.com/maps/api/directions/json?origin=$originLat,$originLng&destination=$destinationLat,$destinationLng&key=${MyGoogleApiKey.googleAPIKey}';
     var response = await http.get(Uri.parse(url));
+    print("Get direction response : ${response.body}");
     if (response.statusCode == 200) {
-      return {
-        'data': jsonDecode(response.body),
-        'error': false,
-      };
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      print(
+          "print distace: ${jsonResponse['routes'][0]['legs'][0]['distance']['text']}");
+      print(
+          "print duration: ${jsonResponse['routes'][0]['legs'][0]['duration']['text']}");
+
+      print(
+          "print speed: ${jsonResponse['routes'][0]['legs'][0]['speed']['text']}");
+      if (jsonResponse['geocoder_status'] == 'OK') {
+        // Extract distance and duration
+        String distanceText =
+            jsonResponse['routes'][0]['legs'][0]['distance']['text'];
+
+        String durationText =
+            jsonResponse['routes'][0]['legs'][0]['duration']['text'];
+        distance.value = distanceText;
+        duration.value = durationText;
+      } else {
+        throw Exception(
+            'Failed to fetch directions: ${jsonResponse['status']}');
+      }
     } else {
-      return {
-        'data': null,
-        'error': true,
-        'message': 'Failed to retrieve route'
-      };
+      throw Exception('Failed to fetch directions');
     }
   }
 
-// Usage in a controller or view model
-  Future<void> fetchRoute() async {
-    var route = await getRoute(37.7749, -122.4194, 34.0522, -118.2437);
-    if (!route['error']) {
-      print('Route data: ${route['data']}');
-      // Process route data for navigation or display on the map
-    } else {
-      print('Error fetching route: ${route['message']}');
+  Future<String> calculateTime(String durationText) async {
+    // Example duration text format: "1 hour 30 mins"
+    // Split the duration text into individual components
+    List<String> components = durationText.split(' ');
+
+    int hours = 0;
+    int minutes = 0;
+
+    // Iterate over the components to extract hours and minutes
+    for (int i = 0; i < components.length; i += 2) {
+      int value = int.parse(components[i]);
+      String unit = components[i + 1];
+
+      if (unit.contains('hour')) {
+        hours += value;
+      } else if (unit.contains('min')) {
+        minutes += value;
+      }
     }
+
+    // Calculate total time in seconds
+    int totalTimeInSeconds = hours * 3600 + minutes * 60;
+
+    // Convert total time to hours and minutes
+    int calculatedHours = totalTimeInSeconds ~/ 3600;
+    int calculatedMinutes = (totalTimeInSeconds % 3600) ~/ 60;
+
+    // Format the calculated time
+    String formattedTime =
+        '$calculatedHours ${calculatedHours == 1 ? 'hour' : 'hours'} $calculatedMinutes ${calculatedMinutes == 1 ? 'min' : 'mins'}';
+
+    return formattedTime;
   }
+
+// // Usage in a controller or view model
+//   Future<void> fetchRoute() async {
+//     var route = await getDirections(37.7749, -122.4194, 34.0522, -118.2437);
+//     if (!route['error']) {
+//       print('Route data: ${route['data']}');
+//       // Process route data for navigation or display on the map
+//     } else {
+//       print('Error fetching route: ${route['message']}');
+//     }
+//   }
 
   // for live tracking
 
@@ -275,6 +366,54 @@ class StationController extends GetxController {
       );
       mapController
           .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      update();
     }
   }
 }
+
+    // "geocoded_waypoints" : 
+    // [
+    //    {
+    //       "geocoder_status" : "OK",
+    //       "place_id" : "ChIJYRU3euw-sz4Rd4oaZrqFN74",
+    //       "types" : 
+    //       [
+    //          "establishment",
+    //          "health",
+    //          "point_of_interest"
+    //       ]
+    //    },
+    //    {
+    //       "geocoder_status" : "OK",
+    //       "place_id" : "ChIJxzC0ZqNAsz4RyAxUhJkNkBA",
+    //       "types" : 
+    //       [
+    //          "premise"
+    //       ]
+    //    }
+ 
+    // [
+    //    {
+    //       "bounds" : 
+    //       {
+    //          "northeast" : 
+    //          {
+    //             "lat" : 24.9572796,
+    //             "lng" : 67.0899872
+    //          },
+    //          "southwest" : 
+    //          {
+    //             "lat" : 24.8795209,
+    //             "lng" : 67.05568719999999
+    //          }
+    //       },
+    //       "copyrights" : "Map data ©2024",
+    //       "legs" : 
+    //       [
+    //          {
+    //             "distance" : 
+    //             {
+    //                "text" : "14.0 km",
+    //                "value" : 14022
+    //             },
+    
