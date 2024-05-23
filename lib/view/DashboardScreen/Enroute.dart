@@ -27,6 +27,7 @@ class _EnrouteState extends State<Enroute> {
   void initState() {
     super.initState();
     stationController.fetchStations();
+    stationController.startLiveLocationTracking();
   }
 
   @override
@@ -70,6 +71,7 @@ class _EnrouteState extends State<Enroute> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
+                      border: Border.all(color: Colors.blue, width: 2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: IconButton(
@@ -128,35 +130,38 @@ class _EnrouteState extends State<Enroute> {
                     ),
                   ),
                 ),
-
-                Positioned(
-                  top: h * 0.2,
-                  left: w * 0.05,
-                  child: Obx(() {
-                    if (stationController.distance.value.isEmpty) {
-                      return const SizedBox();
-                    }
-                    return Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Distance: ${stationController.distance.value}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            'Duration: ${stationController.duration.value}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                ),
+                // show  distace and time
+                Obx(() {
+                  if (stationController.distance.value.isEmpty ||
+                      stationController.duration.value.isEmpty) {
+                    return SizedBox(); // Return an empty widget if distance or duration is empty
+                  }
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.blue, width: 1),
+                    ),
+                    height: h * 0.05,
+                    width: w * 0.75,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'Distance: ${stationController.distance.value}',
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Duration: ${stationController.duration.value}',
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ],
             ),
           ),

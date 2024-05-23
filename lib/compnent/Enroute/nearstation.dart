@@ -231,24 +231,22 @@ class NearStation extends StatelessWidget {
           ),
         ),
         Positioned(
+          left: -20,
           child: Container(
-            height: h * 0.08,
-            width: w * 0.1,
+            height: h * 0.09,
+            width: w * 0.3,
             decoration: const BoxDecoration(
-              color: Colors.transparent,
+              color: Colors.white,
               shape: BoxShape.circle,
             ),
             child: IconButton(
               onPressed: () {
-                stationController.polylineCoordinates.clear();
                 stationController.drawPolyline(latitude, longitude);
-
-                // stationController.animateToStation(latitude, longitude);
               },
               icon: const Icon(
                 Icons.directions,
                 color: Colors.red, // Set the icon color to red
-                size: 40,
+                size: 50,
               ),
             ),
           ),
@@ -271,7 +269,7 @@ class NearStation extends StatelessWidget {
               },
               icon: const Icon(
                 Icons.my_location,
-                color: Colors.green, // Set the icon color to red
+                color: Colors.green,
                 size: 25,
               ),
             ),

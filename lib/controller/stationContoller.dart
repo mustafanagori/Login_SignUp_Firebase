@@ -30,11 +30,13 @@ class StationController extends GetxController {
   void onInit() {
     super.onInit();
     fetchStations();
+
     loadCurrentLocation();
   }
 
   // load the current user location
   loadCurrentLocation() async {
+    print("getting current location");
     try {
       Position value = await getLocationPermission();
       BitmapDescriptor customIcon = await getResizedIcon(
@@ -87,7 +89,8 @@ class StationController extends GetxController {
         PointLatLng(currentPosition.latitude, currentPosition.longitude),
         PointLatLng(endLat, endLng),
       );
-
+      getRoute(
+          currentPosition.altitude, currentPosition.longitude, endLat, endLng);
       if (result.points.isNotEmpty) {
         // Clear previous polylines
         polylineCoordinates.clear();
@@ -191,6 +194,7 @@ class StationController extends GetxController {
 
   Future<Map<String, dynamic>> getRoute(
       double startLat, double startLng, double endLat, double endLng) async {
+    print("making route ");
     String url =
         'https://api.mapbox.com/directions/v5/mapbox/driving/$startLng,$startLat;$endLng,$endLat?steps=true&geometries=geojson&access_token=${MyGoogleApiKey.googleAPIKey}';
 
@@ -224,7 +228,7 @@ class StationController extends GetxController {
 
   void startLiveLocationTracking() {
     Geolocator.getPositionStream(
-      locationSettings: LocationSettings(
+      locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 10, // Update location every 10 meters
       ),
@@ -260,7 +264,6 @@ class StationController extends GetxController {
 
     if (result.points.isNotEmpty) {
       polylineCoordinates.clear();
-
       result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
