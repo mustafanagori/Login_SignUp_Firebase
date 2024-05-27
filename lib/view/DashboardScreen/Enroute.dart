@@ -42,27 +42,76 @@ class _EnrouteState extends State<Enroute> {
             flex: 4,
             child: Stack(
               children: [
-                // Google Map
+                // Google Map and Distance/Duration Display
                 Obx(() {
                   if (stationController.stations.isEmpty) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ));
                   }
-                  return GoogleMap(
-                    mapType: MapType.hybrid,
-                    initialCameraPosition: _initialPosition,
-                    onMapCreated: (GoogleMapController controller) {
-                      stationController.controller.complete(controller);
-                    },
-                    markers: Set<Marker>.of(stationController.marker),
-                    polylines: {
-                      if (stationController.polylineCoordinates.isNotEmpty)
-                        Polyline(
-                          polylineId: const PolylineId('route'),
-                          points: stationController.polylineCoordinates,
-                          color: Colors.blue,
-                          width: 5,
+
+                  return Stack(
+                    children: [
+                      // Google Map
+                      GoogleMap(
+                        mapType: MapType.hybrid,
+                        initialCameraPosition: _initialPosition,
+                        onMapCreated: (GoogleMapController controller) {
+                          stationController.controller.complete(controller);
+                        },
+                        markers: Set<Marker>.of(stationController.marker),
+                        polylines: {
+                          if (stationController.polylineCoordinates.isNotEmpty)
+                            Polyline(
+                              polylineId: const PolylineId('route'),
+                              points: stationController.polylineCoordinates,
+                              color: Colors.blue,
+                              width: 5,
+                            ),
+                        },
+                      ),
+                      // Distance and duration display
+                      Positioned(
+                        child: Visibility(
+                          visible:
+                              stationController.distance.value.isNotEmpty &&
+                                  stationController.duration.value.isNotEmpty,
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Padding(
+                              padding: EdgeInsets.only(top: h * 0.06),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border:
+                                      Border.all(color: Colors.blue, width: 1),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Distance: ${stationController.distance.value}',
+                                      style: const TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      'Duration: ${stationController.duration.value}',
+                                      style: const TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                    },
+                      ),
+                    ],
                   );
                 }),
                 // Current location button
@@ -78,6 +127,8 @@ class _EnrouteState extends State<Enroute> {
                     child: IconButton(
                       onPressed: () {
                         stationController.polylineCoordinates.clear();
+                        stationController.distance.value = '';
+                        stationController.duration.value = '';
                         stationController.loadCurrentLocation();
                       },
                       icon: const Icon(
@@ -128,48 +179,6 @@ class _EnrouteState extends State<Enroute> {
                         },
                       ),
                     ),
-                  ),
-                ),
-                // Distance and duration display
-                Positioned(
-                  top: h * 0.05,
-                  left: w * 0.16,
-                  child: Obx(
-                    () {
-                      print(
-                          "distance => ${stationController.distance.value.toString()}");
-                      print(
-                          "duration => ${stationController.duration.value.toString()}");
-                      if (stationController.distance.value.isEmpty &&
-                          stationController.duration.value.isEmpty) {
-                        return const SizedBox();
-                      }
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.blue, width: 1),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Distance: ${stationController.distance.value.toString()}',
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.white),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              'Duration: ${stationController.duration.value.toString()}',
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
                   ),
                 ),
               ],

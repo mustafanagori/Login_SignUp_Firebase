@@ -25,15 +25,6 @@ class StationController extends GetxController {
   RxString distance = ''.obs;
   RxString duration = ''.obs;
 
-  // to set map when making polyline
-  GoogleMapController? _mapController;
-
-  GoogleMapController? get mapController => _mapController;
-  set mapController(GoogleMapController? value) {
-    _mapController = value;
-    update();
-  }
-
   void showInfoAndStartLiveTracking() async {
     if (polylineCoordinates.isNotEmpty) {
       // Show distance and duration
@@ -54,7 +45,7 @@ class StationController extends GetxController {
     try {
       Position value = await getLocationPermission();
       BitmapDescriptor customIcon = await getResizedIcon(
-        'assets/pin.png',
+        'assets/car.png',
         12,
       );
       marker.add(
@@ -95,8 +86,7 @@ class StationController extends GetxController {
         for (var point in result.points) {
           polylineCoordinates.add(LatLng(point.latitude, point.longitude));
         }
-        // getDirections(currentPosition.latitude, currentPosition.longitude,
-        //     endLat, endLng);
+
         final GoogleMapController mapController = await controller.future;
         CameraPosition cameraPosition = CameraPosition(
           zoom: 12,
@@ -105,7 +95,8 @@ class StationController extends GetxController {
         await mapController
             .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
         //Position position = await getLocationPermission();
-        update();
+        getDirections(currentPosition.latitude, currentPosition.longitude,
+            endLat, endLng);
       }
     } catch (e) {
       Get.snackbar("Alert", "Invalid Route Your so far from your location");
@@ -169,7 +160,7 @@ class StationController extends GetxController {
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
-      if (jsonResponse['geocoder_status'] == 'OK') {
+      if (jsonResponse.isNotEmpty) {
         String distanceText =
             jsonResponse['routes'][0]['legs'][0]['distance']['text'];
         String durationText =
