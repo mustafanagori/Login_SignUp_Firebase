@@ -231,10 +231,10 @@ class NearStation extends StatelessWidget {
           ),
         ),
         Positioned(
-          left: -20,
+          left: -15,
           child: Container(
-            height: h * 0.09,
-            width: w * 0.3,
+            height: h * 0.06,
+            width: w * 0.2,
             decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -246,7 +246,7 @@ class NearStation extends StatelessWidget {
               icon: const Icon(
                 Icons.directions,
                 color: Colors.red, // Set the icon color to red
-                size: 50,
+                size: 35,
               ),
             ),
           ),

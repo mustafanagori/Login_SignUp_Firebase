@@ -18,7 +18,7 @@ class _EnrouteState extends State<Enroute> {
 
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(24.857286878376392, 67.01812779063066),
-    zoom: 15, // Adjusted zoom level for better visibility
+    zoom: 15,
   );
 
   User? user = FirebaseAuth.instance.currentUser;
@@ -26,8 +26,8 @@ class _EnrouteState extends State<Enroute> {
   @override
   void initState() {
     super.initState();
+    stationController.loadCurrentLocation();
     stationController.fetchStations();
-    stationController.startLiveLocationTracking();
   }
 
   @override
@@ -42,7 +42,7 @@ class _EnrouteState extends State<Enroute> {
             flex: 4,
             child: Stack(
               children: [
-                // google map
+                // Google Map
                 Obx(() {
                   if (stationController.stations.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
@@ -55,18 +55,17 @@ class _EnrouteState extends State<Enroute> {
                     },
                     markers: Set<Marker>.of(stationController.marker),
                     polylines: {
-                      Polyline(
-                        polylineId: const PolylineId('route'),
-                        points: stationController.polylineCoordinates,
-                        color: Colors.blue,
-                        width: 5,
-                        visible: true,
-                        geodesic: false,
-                      ),
+                      if (stationController.polylineCoordinates.isNotEmpty)
+                        Polyline(
+                          polylineId: const PolylineId('route'),
+                          points: stationController.polylineCoordinates,
+                          color: Colors.blue,
+                          width: 5,
+                        ),
                     },
                   );
                 }),
-                // cuurent location
+                // Current location button
                 Positioned(
                   top: h * 0.6,
                   right: w * 0.04,
@@ -89,8 +88,7 @@ class _EnrouteState extends State<Enroute> {
                     ),
                   ),
                 ),
-
-                // list of station
+                // List of stations
                 Positioned(
                   bottom: 0,
                   child: SizedBox(
@@ -132,42 +130,48 @@ class _EnrouteState extends State<Enroute> {
                     ),
                   ),
                 ),
-                // show  distace and time
-                Obx(() {
-                  if (stationController.distance.value.isEmpty &&
-                      stationController.duration.value.isEmpty) {
-                    return SizedBox();
-                  }
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.blue, width: 1),
-                    ),
-                    height: h * 0.05,
-                    width: w * 0.75,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Obx(
-                          () => Text(
-                            'Distance: ${stationController.distance.value}',
-                            style: const TextStyle(
-                                fontSize: 16, color: Colors.white),
-                          ),
+                // Distance and duration display
+                Positioned(
+                  top: h * 0.05,
+                  left: w * 0.16,
+                  child: Obx(
+                    () {
+                      print(
+                          "distance => ${stationController.distance.value.toString()}");
+                      print(
+                          "duration => ${stationController.duration.value.toString()}");
+                      if (stationController.distance.value.isEmpty &&
+                          stationController.duration.value.isEmpty) {
+                        return const SizedBox();
+                      }
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.blue, width: 1),
                         ),
-                        const SizedBox(width: 10),
-                        Obx(
-                          () => Text(
-                            'Duration: ${stationController.duration.value}  ',
-                            style: const TextStyle(
-                                fontSize: 16, color: Colors.white),
-                          ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Distance: ${stationController.distance.value.toString()}',
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Duration: ${stationController.duration.value.toString()}',
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.white),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                }),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),
