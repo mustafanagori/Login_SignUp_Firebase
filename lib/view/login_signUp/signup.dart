@@ -5,8 +5,16 @@ import 'package:get/get.dart';
 import 'package:signup_login/compnent/otherWidget/CustomButton.dart';
 import 'package:signup_login/controller/signup_controller.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
+
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
   final SignupController signupController = Get.find();
+
   bool _isObscure = true;
 
   @override

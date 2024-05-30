@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:signup_login/controller/bookingController.dart';
+
 import 'package:signup_login/view/booking/booking_history.dart';
 import 'package:signup_login/view/booking/ongoing-booking.dart';
 

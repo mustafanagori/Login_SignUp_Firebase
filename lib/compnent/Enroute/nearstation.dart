@@ -242,17 +242,16 @@ class NearStation extends StatelessWidget {
             child: IconButton(
               onPressed: () {
                 stationController.drawPolyline(latitude, longitude);
-                //stationController.startLiveTracking(latitude, longitude);
+                stationController.startLiveTracking(latitude, longitude);
               },
               icon: const Icon(
                 Icons.directions,
-                color: Colors.red, // Set the icon color to red
+                color: Colors.red,
                 size: 35,
               ),
             ),
           ),
         ),
-        // station location
         Positioned(
           top: -12,
           right: 16,

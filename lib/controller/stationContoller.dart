@@ -20,27 +20,18 @@ class StationController extends GetxController {
   RxString distance = ''.obs;
   RxString duration = ''.obs;
 
-  late StreamSubscription<Position> positionStreamSubscription;
+  Rxn<StreamSubscription<Position>> positionStreamSubscription =
+      Rxn<StreamSubscription<Position>>();
 
   @override
   void onInit() {
     super.onInit();
-    loadCurrentLocation();
     fetchStations();
-  }
-
-  @override
-  void dispose() {
-    polylineCoordinates.clear();
-    distance.value = '';
-    duration.value = '';
-    stopLiveTracking();
-    super.dispose();
+    loadCurrentLocation();
   }
 
   void startLiveTracking(double destinationLat, double destinationLng) {
-    print("callinmg start live location");
-    positionStreamSubscription = Geolocator.getPositionStream(
+    positionStreamSubscription.value = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 10,
@@ -50,20 +41,26 @@ class StationController extends GetxController {
       updatePolyline(position, destinationLat, destinationLng);
       updateDistanceAndDuration(position.latitude, position.longitude,
           destinationLat, destinationLng);
-      print("Stop live location");
     });
   }
 
   void stopLiveTracking() {
-    if (positionStreamSubscription != null) {
-      positionStreamSubscription.cancel();
-    }
+    positionStreamSubscription.value?.cancel();
+  }
+
+  void resetTracking() {
+    stopLiveTracking();
+    polylineCoordinates.clear();
+    distance.value = '';
+    duration.value = '';
+    update();
   }
 
   loadCurrentLocation() async {
     try {
       Position value = await getLocationPermission();
       BitmapDescriptor customIcon = await getResizedIcon('assets/car.png', 12);
+      print("load current location");
       marker.add(
         Marker(
           markerId: const MarkerId('Your Location'),
@@ -111,10 +108,10 @@ class StationController extends GetxController {
             .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
         updateDistanceAndDuration(currentPosition.latitude,
             currentPosition.longitude, endLat, endLng);
-        update();
       }
     } catch (e) {
-      Get.snackbar("Error", "$e");
+      Get.snackbar(
+          "Alert", "Invalid Route, you are too far from your location");
       print('Error drawing polyline: $e');
     }
   }
@@ -145,7 +142,6 @@ class StationController extends GetxController {
 
   Future<void> updatePolyline(
       Position position, double destinationLat, double destinationLng) async {
-    print("making route");
     PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
       MyGoogleApiKey.googleAPIKey,
       PointLatLng(position.latitude, position.longitude),
@@ -247,15 +243,14 @@ class StationController extends GetxController {
     return BitmapDescriptor.fromBytes(resizedData);
   }
 
-  void updateCurrentLocationMarker(Position position) async {
+  void updateCurrentLocationMarker(Position position) {
     marker.removeWhere((marker) => marker.markerId.value == 'Your Location');
-    BitmapDescriptor customIcon = await getResizedIcon('assets/car.png', 12);
     marker.add(
       Marker(
         markerId: const MarkerId('Your Location'),
         position: LatLng(position.latitude, position.longitude),
-        infoWindow: const InfoWindow(title: "Current Location"),
-        icon: customIcon,
+        infoWindow: const InfoWindow(title: "Your Location"),
+        icon: BitmapDescriptor.defaultMarker,
       ),
     );
     update();

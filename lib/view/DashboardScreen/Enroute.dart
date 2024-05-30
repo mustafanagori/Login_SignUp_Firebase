@@ -28,7 +28,6 @@ class _EnrouteState extends State<Enroute> {
     super.initState();
     stationController.loadCurrentLocation();
     stationController.fetchStations();
-    //stationController.startLiveLocationTracking();
   }
 
   @override
@@ -182,6 +181,7 @@ class _EnrouteState extends State<Enroute> {
                         stationController.distance.value = '';
                         stationController.duration.value = '';
                         stationController.stopLiveTracking();
+                        stationController.loadCurrentLocation();
                       },
                       icon: const Icon(
                         Icons.my_location_rounded,
@@ -210,7 +210,7 @@ class _EnrouteState extends State<Enroute> {
                         } else {
                           stationController.startLiveTracking(
                             selectedStation!.map.latitude,
-                            selectedStation!.map.longitude,
+                            selectedStation.map.longitude,
                           );
                         }
                       },
