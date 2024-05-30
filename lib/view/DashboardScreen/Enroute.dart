@@ -28,13 +28,14 @@ class _EnrouteState extends State<Enroute> {
     super.initState();
     stationController.loadCurrentLocation();
     stationController.fetchStations();
+    //stationController.startLiveLocationTracking();
   }
 
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
-
+    Station? selectedStation;
     return Scaffold(
       body: Column(
         children: [
@@ -46,9 +47,10 @@ class _EnrouteState extends State<Enroute> {
                 Obx(() {
                   if (stationController.stations.isEmpty) {
                     return const Center(
-                        child: CircularProgressIndicator(
-                      color: Colors.white,
-                    ));
+                      child: CircularProgressIndicator(
+                        color: Colors.blue,
+                      ),
+                    );
                   }
 
                   return Stack(
@@ -96,13 +98,17 @@ class _EnrouteState extends State<Enroute> {
                                     Text(
                                       'Distance: ${stationController.distance.value}',
                                       style: const TextStyle(
-                                          fontSize: 16, color: Colors.white),
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
                                       'Duration: ${stationController.duration.value}',
                                       style: const TextStyle(
-                                          fontSize: 16, color: Colors.white),
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -114,31 +120,7 @@ class _EnrouteState extends State<Enroute> {
                     ],
                   );
                 }),
-                // Current location button
-                Positioned(
-                  top: h * 0.6,
-                  right: w * 0.04,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.blue, width: 2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        stationController.polylineCoordinates.clear();
-                        stationController.distance.value = '';
-                        stationController.duration.value = '';
-                        stationController.loadCurrentLocation();
-                      },
-                      icon: const Icon(
-                        Icons.my_location_rounded,
-                        color: Colors.black54,
-                        size: 25,
-                      ),
-                    ),
-                  ),
-                ),
+
                 // List of stations
                 Positioned(
                   bottom: 0,
@@ -154,7 +136,9 @@ class _EnrouteState extends State<Enroute> {
                         () {
                           if (stationController.stations.isEmpty) {
                             return const Center(
-                                child: CircularProgressIndicator());
+                                child: CircularProgressIndicator(
+                              color: Colors.blue,
+                            ));
                           } else {
                             return ListView.builder(
                               scrollDirection: Axis.horizontal,
@@ -177,6 +161,66 @@ class _EnrouteState extends State<Enroute> {
                             );
                           }
                         },
+                      ),
+                    ),
+                  ),
+                ),
+                // Current location button
+                Positioned(
+                  top: h * 0.6,
+                  right: w * 0.04,
+                  child: Container(
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      //    border: Border.all(color: Colors.blue, width: 2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        stationController.polylineCoordinates.clear();
+                        stationController.distance.value = '';
+                        stationController.duration.value = '';
+                        stationController.stopLiveTracking();
+                      },
+                      icon: const Icon(
+                        Icons.my_location_rounded,
+                        color: Colors.black54,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                ),
+                // start route live tracking
+                Positioned(
+                  top: h * 0.52,
+                  right: w * 0.04,
+                  child: Container(
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      // border: Border.all(color: Colors.blue, width: 2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: TextButton(
+                      onPressed: () {
+                        if (stationController.polylineCoordinates.isEmpty) {
+                          Get.snackbar("Alert",
+                              "Firest Select Station Where you want to Go");
+                        } else {
+                          stationController.startLiveTracking(
+                            selectedStation!.map.latitude,
+                            selectedStation!.map.longitude,
+                          );
+                        }
+                      },
+                      child: const Text(
+                        "Go",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
