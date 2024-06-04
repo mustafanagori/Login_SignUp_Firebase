@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,15 +16,16 @@ class Enroute extends StatefulWidget {
 }
 
 class _EnrouteState extends State<Enroute> {
-  final StationController stationController = Get.find();
-
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(24.857286878376392, 67.01812779063066),
     zoom: 15,
   );
 
   User? user = FirebaseAuth.instance.currentUser;
+  Station? selectedStation;
 
+  final controller = Completer<GoogleMapController>();
+  final StationController stationController = Get.find();
   @override
   void initState() {
     super.initState();
@@ -32,9 +35,9 @@ class _EnrouteState extends State<Enroute> {
 
   @override
   Widget build(BuildContext context) {
+    final StationController stationController = Get.find();
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
-    Station? selectedStation;
     return Scaffold(
       body: Column(
         children: [
@@ -55,6 +58,9 @@ class _EnrouteState extends State<Enroute> {
                   return Stack(
                     children: [
                       // Google Map
+                      //    RefreshIndicator(
+                      //  onRefresh: stationController.refresh,
+                      //  child:
                       GoogleMap(
                         mapType: MapType.hybrid,
                         initialCameraPosition: _initialPosition,
@@ -72,6 +78,7 @@ class _EnrouteState extends State<Enroute> {
                             ),
                         },
                       ),
+                      //   ),
                       // Distance and duration display
                       Positioned(
                         child: Visibility(
@@ -177,10 +184,6 @@ class _EnrouteState extends State<Enroute> {
                     ),
                     child: IconButton(
                       onPressed: () {
-                        stationController.polylineCoordinates.clear();
-                        stationController.distance.value = '';
-                        stationController.duration.value = '';
-                        stationController.stopLiveTracking();
                         stationController.loadCurrentLocation();
                       },
                       icon: const Icon(
@@ -192,39 +195,39 @@ class _EnrouteState extends State<Enroute> {
                   ),
                 ),
                 // start route live tracking
-                Positioned(
-                  top: h * 0.52,
-                  right: w * 0.04,
-                  child: Container(
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      // border: Border.all(color: Colors.blue, width: 2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        if (stationController.polylineCoordinates.isEmpty) {
-                          Get.snackbar("Alert",
-                              "Firest Select Station Where you want to Go");
-                        } else {
-                          stationController.startLiveTracking(
-                            selectedStation!.map.latitude,
-                            selectedStation.map.longitude,
-                          );
-                        }
-                      },
-                      child: const Text(
-                        "Go",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // Positioned(
+                //   top: h * 0.52,
+                //   right: w * 0.04,
+                //   child: Container(
+                //     width: 50,
+                //     decoration: BoxDecoration(
+                //       color: Colors.white,
+                //       // border: Border.all(color: Colors.blue, width: 2),
+                //       borderRadius: BorderRadius.circular(20),
+                //     ),
+                //     child: TextButton(
+                //       onPressed: () {
+                //         if (stationController.polylineCoordinates.isEmpty) {
+                //           Get.snackbar("Alert",
+                //               "First Select Station Where you want to Go");
+                //         } else {
+                //           stationController.startLiveTracking(
+                //             selectedStation!.map.latitude,
+                //             selectedStation!.map.longitude,
+                //           );
+                //         }
+                //       },
+                //       child: const Text(
+                //         "Go",
+                //         style: TextStyle(
+                //           fontSize: 18,
+                //           color: Colors.green,
+                //           fontWeight: FontWeight.bold,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

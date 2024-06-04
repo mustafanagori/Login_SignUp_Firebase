@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:signup_login/controller/stationContoller.dart';
 import 'package:signup_login/view/stationDetail.dart';
 
-class NearStation extends StatelessWidget {
+class NearStation extends StatefulWidget {
   final String stationName;
   final String path;
   final String status;
@@ -27,6 +27,11 @@ class NearStation extends StatelessWidget {
     required this.longitude,
   });
 
+  @override
+  State<NearStation> createState() => _NearStationState();
+}
+
+class _NearStationState extends State<NearStation> {
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -55,7 +60,7 @@ class NearStation extends StatelessWidget {
                     child: Stack(
                       children: [
                         Image.network(
-                          path,
+                          widget.path,
                           height: double.infinity,
                           width: double.infinity,
                           fit: BoxFit.cover,
@@ -75,14 +80,14 @@ class NearStation extends StatelessWidget {
                             );
                           },
                         ),
-                        if (status.isNotEmpty)
+                        if (widget.status.isNotEmpty)
                           Positioned(
                             right: 0,
                             bottom: 0,
                             child: Container(
                               width: w * 0.15,
                               decoration: BoxDecoration(
-                                color: status == 'open'
+                                color: widget.status == 'open'
                                     ? Colors.green
                                     : Colors.red,
                                 borderRadius: const BorderRadius.only(
@@ -93,7 +98,7 @@ class NearStation extends StatelessWidget {
                                 padding: const EdgeInsets.all(2.0),
                                 child: Center(
                                   child: Text(
-                                    status,
+                                    widget.status,
                                     style: const TextStyle(
                                       fontSize: 12,
                                       color: Colors.white,
@@ -115,14 +120,14 @@ class NearStation extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        stationName,
+                        widget.stationName,
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       Text(
-                        address,
+                        widget.address,
                         maxLines: 2,
                         style: const TextStyle(
                           fontSize: 10,
@@ -139,7 +144,7 @@ class NearStation extends StatelessWidget {
                                 size: 15,
                               ),
                               Text(
-                                serviceTime,
+                                widget.serviceTime,
                                 style: const TextStyle(
                                   fontSize: 11,
                                 ),
@@ -168,7 +173,7 @@ class NearStation extends StatelessWidget {
                                 size: 15,
                               ),
                               Text(
-                                rating.toString(),
+                                widget.rating.toString(),
                                 style: const TextStyle(
                                   fontSize: 11,
                                 ),
@@ -191,7 +196,7 @@ class NearStation extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                connectionPoint.toString(),
+                                widget.connectionPoint.toString(),
                                 style: const TextStyle(
                                   color: Colors.black54,
                                   fontSize: 11,
@@ -230,6 +235,7 @@ class NearStation extends StatelessWidget {
             ),
           ),
         ),
+        // direction icon
         Positioned(
           left: -15,
           child: Container(
@@ -241,8 +247,10 @@ class NearStation extends StatelessWidget {
             ),
             child: IconButton(
               onPressed: () {
-                stationController.drawPolyline(latitude, longitude);
-                stationController.startLiveTracking(latitude, longitude);
+                stationController.drawPolyline(
+                    widget.latitude, widget.longitude);
+                stationController.startLiveTracking(
+                    widget.latitude, widget.longitude);
               },
               icon: const Icon(
                 Icons.directions,
@@ -252,6 +260,7 @@ class NearStation extends StatelessWidget {
             ),
           ),
         ),
+        // my location icon
         Positioned(
           top: -12,
           right: 16,
@@ -264,8 +273,8 @@ class NearStation extends StatelessWidget {
             ),
             child: IconButton(
               onPressed: () async {
-                stationController.polylineCoordinates.clear();
-                stationController.animateToStation(latitude, longitude);
+                stationController.animateToStation(
+                    widget.latitude, widget.longitude);
               },
               icon: const Icon(
                 Icons.my_location,

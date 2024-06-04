@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
@@ -19,6 +21,7 @@ class StationController extends GetxController {
   RxList<LatLng> polylineCoordinates = <LatLng>[].obs;
   RxString distance = ''.obs;
   RxString duration = ''.obs;
+  bool isArrived = false;
 
   Rxn<StreamSubscription<Position>> positionStreamSubscription =
       Rxn<StreamSubscription<Position>>();
@@ -30,26 +33,62 @@ class StationController extends GetxController {
     loadCurrentLocation();
   }
 
+  // @override
+  // Future<void> refresh() async {
+  //   await fetchStations();
+  //   update();
+  // }
+
   void startLiveTracking(double destinationLat, double destinationLng) {
     positionStreamSubscription.value = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
-        distanceFilter: 10,
+        distanceFilter: 5,
       ),
     ).listen((Position position) {
       updateCurrentLocationMarker(position);
-      updatePolyline(position, destinationLat, destinationLng);
+      if (!isArrived) {
+        updatePolyline(position, destinationLat, destinationLng);
+      }
       updateDistanceAndDuration(position.latitude, position.longitude,
           destinationLat, destinationLng);
+      if (kDebugMode) {
+        print("listen from google api when Corrdinate change");
+      }
+
+      // check when desination arrived
+      double distanceToDestination = Geolocator.distanceBetween(
+          position.latitude,
+          position.longitude,
+          destinationLat,
+          destinationLng);
+
+      if (distanceToDestination <= 50) {
+        print("reamining distace $distanceToDestination");
+        isArrived = true;
+        Get.defaultDialog(
+          title: "Arrived",
+          middleText: "You have arrived On Station!",
+          onConfirm: () {
+            Get.back();
+          },
+          textConfirm: "OK",
+          buttonColor: Colors.blue,
+        );
+        stopLiveTracking();
+        update();
+      }
     });
   }
 
   void stopLiveTracking() {
+    print("Reset tracking");
+    resetTracking();
     positionStreamSubscription.value?.cancel();
+    update();
   }
 
-  void resetTracking() {
-    stopLiveTracking();
+  void resetTracking() async {
     polylineCoordinates.clear();
     distance.value = '';
     duration.value = '';
@@ -57,6 +96,7 @@ class StationController extends GetxController {
   }
 
   loadCurrentLocation() async {
+    stopLiveTracking();
     try {
       Position value = await getLocationPermission();
       BitmapDescriptor customIcon = await getResizedIcon('assets/car.png', 12);
@@ -77,6 +117,7 @@ class StationController extends GetxController {
       final GoogleMapController mapController = await controller.future;
       mapController
           .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
       update();
     } catch (e) {
       print("Error fetching location: $e");
@@ -86,6 +127,7 @@ class StationController extends GetxController {
 
   Future<void> drawPolyline(double endLat, double endLng) async {
     try {
+      print("draw poly line");
       Position currentPosition = await getLocationPermission();
       PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
         MyGoogleApiKey.googleAPIKey,
@@ -165,12 +207,14 @@ class StationController extends GetxController {
   }
 
   Future<void> fetchStations() async {
+    print("fetch statin");
     try {
       final snapshot =
           await FirebaseFirestore.instance.collection('stations').get();
       if (snapshot.docs.isNotEmpty) {
         stations.assignAll(
             snapshot.docs.map((doc) => Station.fromFirestore(doc)).toList());
+
         for (var station in stations) {
           BitmapDescriptor customIcon =
               await getResizedIcon('assets/stationIcon.png', 12);
@@ -195,6 +239,7 @@ class StationController extends GetxController {
   }
 
   Future<void> animateToStation(double latitude, double longitude) async {
+    stopLiveTracking();
     final GoogleMapController mapController = await controller.future;
     CameraPosition cameraPosition = CameraPosition(
       zoom: 15,
@@ -243,14 +288,15 @@ class StationController extends GetxController {
     return BitmapDescriptor.fromBytes(resizedData);
   }
 
-  void updateCurrentLocationMarker(Position position) {
+  void updateCurrentLocationMarker(Position position) async {
     marker.removeWhere((marker) => marker.markerId.value == 'Your Location');
+    BitmapDescriptor customIcon = await getResizedIcon('assets/car.png', 12);
     marker.add(
       Marker(
         markerId: const MarkerId('Your Location'),
         position: LatLng(position.latitude, position.longitude),
         infoWindow: const InfoWindow(title: "Your Location"),
-        icon: BitmapDescriptor.defaultMarker,
+        icon: customIcon,
       ),
     );
     update();

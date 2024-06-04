@@ -55,9 +55,9 @@ dependencies:
   google_directions_api: ^0.10.0
   flutter_polyline_points: ^2.0.0
   google_maps_directions: ^0.0.4
+  animated_marker: ^0.0.5
   # to provide animation to marker when live tracking
-  flutter_map_animated_marker: ^2.0.0
-
+  
 
 dev_dependencies:
   flutter_test:
