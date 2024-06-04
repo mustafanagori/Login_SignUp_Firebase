@@ -21,7 +21,6 @@ class StationController extends GetxController {
   RxList<LatLng> polylineCoordinates = <LatLng>[].obs;
   RxString distance = ''.obs;
   RxString duration = ''.obs;
-  bool isArrived = false;
 
   Rxn<StreamSubscription<Position>> positionStreamSubscription =
       Rxn<StreamSubscription<Position>>();
@@ -33,12 +32,6 @@ class StationController extends GetxController {
     loadCurrentLocation();
   }
 
-  // @override
-  // Future<void> refresh() async {
-  //   await fetchStations();
-  //   update();
-  // }
-
   void startLiveTracking(double destinationLat, double destinationLng) {
     positionStreamSubscription.value = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -46,72 +39,73 @@ class StationController extends GetxController {
         distanceFilter: 5,
       ),
     ).listen((Position position) {
-      updateCurrentLocationMarker(position);
-      if (!isArrived) {
-        updatePolyline(position, destinationLat, destinationLng);
-      }
-      updateDistanceAndDuration(position.latitude, position.longitude,
-          destinationLat, destinationLng);
-      if (kDebugMode) {
-        print("listen from google api when Corrdinate change");
-      }
-
-      // check when desination arrived
       double distanceToDestination = Geolocator.distanceBetween(
-          position.latitude,
-          position.longitude,
-          destinationLat,
-          destinationLng);
+        position.latitude,
+        position.longitude,
+        destinationLat,
+        destinationLng,
+      );
 
-      if (distanceToDestination <= 50) {
-        print("reamining distace $distanceToDestination");
-        isArrived = true;
-        Get.defaultDialog(
-          title: "Arrived",
-          middleText: "You have arrived On Station!",
-          onConfirm: () {
-            Get.back();
-          },
-          textConfirm: "OK",
-          buttonColor: Colors.blue,
+      if (distanceToDestination <= 30) {
+        if (kDebugMode) {
+          print("Remaining distance: $distanceToDestination");
+        }
+
+        Get.snackbar(
+          "Arrived",
+          "You are at your destination",
+          backgroundColor: Colors.white,
         );
+
         stopLiveTracking();
-        update();
+        return;
       }
+
+      updateCurrentLocationMarker(position);
+      updatePolyline(position, destinationLat, destinationLng);
+      updateDistanceAndDuration(
+        position.latitude,
+        position.longitude,
+        destinationLat,
+        destinationLng,
+      );
     });
   }
 
   void stopLiveTracking() {
-    print("Reset tracking");
+    if (kDebugMode) {
+      print("Stopping live tracking");
+    }
     resetTracking();
     positionStreamSubscription.value?.cancel();
-    update();
   }
 
-  void resetTracking() async {
+  void resetTracking() {
     polylineCoordinates.clear();
     distance.value = '';
     duration.value = '';
     update();
   }
 
-  loadCurrentLocation() async {
+  Future<void> loadCurrentLocation() async {
     stopLiveTracking();
+    if (kDebugMode) {
+      print("Loading current location");
+    }
     try {
-      Position value = await getLocationPermission();
+      Position position = await getLocationPermission();
       BitmapDescriptor customIcon = await getResizedIcon('assets/car.png', 12);
-      print("load current location");
       marker.add(
         Marker(
           markerId: const MarkerId('Your Location'),
-          position: LatLng(value.latitude, value.longitude),
+          position: LatLng(position.latitude, position.longitude),
           infoWindow: const InfoWindow(title: "Your Location"),
           icon: customIcon,
         ),
       );
       CameraPosition cameraPosition = CameraPosition(
         zoom: 15,
-        target: LatLng(value.latitude, value.longitude),
+        target: LatLng(position.latitude, position.longitude),
       );
 
       final GoogleMapController mapController = await controller.future;
@@ -120,21 +114,42 @@ class StationController extends GetxController {
 
       update();
     } catch (e) {
-      print("Error fetching location: $e");
+      if (kDebugMode) {
+        print("Error fetching location: $e");
+      }
       Get.snackbar("Alert", "Unable to get current location");
     }
   }
 
   Future<void> drawPolyline(double endLat, double endLng) async {
     try {
-      print("draw poly line");
       Position currentPosition = await getLocationPermission();
+      double distanceToDestination = Geolocator.distanceBetween(
+        currentPosition.latitude,
+        currentPosition.longitude,
+        endLat,
+        endLng,
+      );
+
+      if (distanceToDestination <= 30) {
+        Get.snackbar(
+          "Arrived",
+          "You are at your destination",
+          backgroundColor: Colors.white,
+        );
+        return;
+      }
+
+      if (kDebugMode) {
+        print("Drawing polyline");
+      }
       PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
         MyGoogleApiKey.googleAPIKey,
         PointLatLng(currentPosition.latitude, currentPosition.longitude),
         PointLatLng(endLat, endLng),
         travelMode: TravelMode.driving,
       );
+
       if (result.points.isNotEmpty) {
         polylineCoordinates.clear();
         for (var point in result.points) {
@@ -148,18 +163,30 @@ class StationController extends GetxController {
         );
         await mapController
             .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-        updateDistanceAndDuration(currentPosition.latitude,
-            currentPosition.longitude, endLat, endLng);
+        updateDistanceAndDuration(
+          currentPosition.latitude,
+          currentPosition.longitude,
+          endLat,
+          endLng,
+        );
       }
     } catch (e) {
       Get.snackbar(
-          "Alert", "Invalid Route, you are too far from your location");
-      print('Error drawing polyline: $e');
+        "Alert",
+        "Invalid route, you are too far from your location",
+      );
+      if (kDebugMode) {
+        print('Error drawing polyline: $e');
+      }
     }
   }
 
-  Future<void> updateDistanceAndDuration(double originLat, double originLng,
-      double destinationLat, double destinationLng) async {
+  Future<void> updateDistanceAndDuration(
+    double originLat,
+    double originLng,
+    double destinationLat,
+    double destinationLng,
+  ) async {
     String url =
         'https://maps.googleapis.com/maps/api/directions/json?origin=$originLat,$originLng&destination=$destinationLat,$destinationLng&key=${MyGoogleApiKey.googleAPIKey}';
     var response = await http.get(Uri.parse(url));
@@ -183,7 +210,10 @@ class StationController extends GetxController {
   }
 
   Future<void> updatePolyline(
-      Position position, double destinationLat, double destinationLng) async {
+    Position position,
+    double destinationLat,
+    double destinationLng,
+  ) async {
     PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
       MyGoogleApiKey.googleAPIKey,
       PointLatLng(position.latitude, position.longitude),
@@ -197,7 +227,7 @@ class StationController extends GetxController {
 
       final GoogleMapController mapController = await controller.future;
       CameraPosition cameraPosition = CameraPosition(
-        zoom: 15,
+        zoom: 16,
         target: LatLng(position.latitude, position.longitude),
       );
       mapController
@@ -207,13 +237,16 @@ class StationController extends GetxController {
   }
 
   Future<void> fetchStations() async {
-    print("fetch statin");
+    if (kDebugMode) {
+      print("Fetching stations");
+    }
     try {
       final snapshot =
           await FirebaseFirestore.instance.collection('stations').get();
       if (snapshot.docs.isNotEmpty) {
         stations.assignAll(
-            snapshot.docs.map((doc) => Station.fromFirestore(doc)).toList());
+          snapshot.docs.map((doc) => Station.fromFirestore(doc)).toList(),
+        );
 
         for (var station in stations) {
           BitmapDescriptor customIcon =
@@ -234,7 +267,9 @@ class StationController extends GetxController {
         }
       }
     } catch (e) {
-      print('Error fetching stations: $e');
+      if (kDebugMode) {
+        print('Error fetching stations: $e');
+      }
     }
   }
 
@@ -274,7 +309,9 @@ class StationController extends GetxController {
   }
 
   Future<BitmapDescriptor> getResizedIcon(
-      String assetPath, double scale) async {
+    String assetPath,
+    double scale,
+  ) async {
     ByteData data = await rootBundle.load(assetPath);
     ui.Codec codec = await ui.instantiateImageCodec(
       data.buffer.asUint8List(),
