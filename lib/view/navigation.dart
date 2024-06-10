@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:signup_login/Api/notification.dart';
+import 'package:signup_login/controller/login_controller.dart';
 import 'package:signup_login/controller/navigation_controller.dart';
 import 'package:signup_login/view/DashboardScreen/Enroute.dart';
 import 'package:signup_login/view/DashboardScreen/booking.dart';
@@ -15,11 +17,20 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   HomeNavigation bottomNavigationContoller = Get.find();
+  LoginController loginController = Get.find();
+  NotificationService notificationServices = NotificationService();
+  @override
+  void initState() {
+    super.initState();
+    notificationServices.requestNotificationPermission();
+    notificationServices.firebaseInit();
+    notificationServices.getDeviceToken().then((value) {
+      print("device toke");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // Access the current theme
-
     return Obx(
       () => Scaffold(
         body: WillPopScope(

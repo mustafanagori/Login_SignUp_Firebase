@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 
 class BookingHistoryController extends GetxController {
-  // List of stations
   final List<Map<String, String>> bookingHistory = [
     {
       "name": "Broome Charging Station",

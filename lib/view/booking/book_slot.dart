@@ -104,7 +104,7 @@ class _BookSlotState extends State<BookSlot> {
                   text: '${_bookSlotController.price}',
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Padding(
                 padding: EdgeInsets.only(bottom: h * 0.02),
                 child: SizedBox(
@@ -118,7 +118,6 @@ class _BookSlotState extends State<BookSlot> {
                       backgroundColor: Colors.blue,
                     ),
                     onPressed: () {
-                      _bookSlotController.printAll();
                       if (_bookSlotController.selectedTime.value != null &&
                           _bookSlotController.selectedDate.value != null &&
                           _bookSlotController.vehicleModelvar.value !=

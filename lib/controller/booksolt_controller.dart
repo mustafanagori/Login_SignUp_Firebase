@@ -14,14 +14,6 @@ class BookController extends GetxController {
   RxString chargerTypevar = 'Select Charger Type'.obs;
   RxDouble price = 0.0.obs;
 
-  void printAll() {
-    print(selectedTime.toString());
-    print(selectedDate.toString());
-    print(connectionTypevar.toString());
-    print(chargerTypevar.toString());
-    print(price.toString());
-  }
-
   void clearAll() {
     selectedTime.value = null;
     selectedDate.value = null;
@@ -142,7 +134,7 @@ class BookController extends GetxController {
             colorScheme: ColorScheme.light(
               primary: Colors.blue.shade300,
             ),
-            buttonTheme: ButtonThemeData(
+            buttonTheme: const ButtonThemeData(
               textTheme: ButtonTextTheme.normal,
             ),
           ),
@@ -167,10 +159,10 @@ class BookController extends GetxController {
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: Colors.blue,
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary: Colors.blue,
             ),
-            buttonTheme: ButtonThemeData(
+            buttonTheme: const ButtonThemeData(
               textTheme: ButtonTextTheme.primary,
             ),
           ),
@@ -181,7 +173,7 @@ class BookController extends GetxController {
 
     if (pickedDate != null) {
       updateSelectedDate(pickedDate);
-      selectedDate.refresh(); // Trigger UI update
+      selectedDate.refresh();
     }
   }
 

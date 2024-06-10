@@ -41,7 +41,9 @@ class _BookConfirmState extends State<BookConfirm> {
               height: h * 0.4,
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(
+                  15,
+                ),
                 border: Border.all(
                   color: Colors.black45,
                   width: 0.5,
@@ -50,7 +52,9 @@ class _BookConfirmState extends State<BookConfirm> {
               child: Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(
+                      16.0,
+                    ),
                     width: double.infinity,
                     height: h * 0.12,
                     child: Row(
@@ -58,12 +62,16 @@ class _BookConfirmState extends State<BookConfirm> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(
+                            14,
+                          ),
                           child: Image(
                             height: double.infinity,
                             width: w * 0.4,
                             fit: BoxFit.cover,
-                            image: AssetImage("assets/car.jpeg"),
+                            image: const AssetImage(
+                              "assets/car.jpeg",
+                            ),
                           ),
                         ),
                         Column(
@@ -71,11 +79,13 @@ class _BookConfirmState extends State<BookConfirm> {
                             Obx(
                               () => Text(
                                 bookController.vehicleModelvar.value,
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.w500),
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
-                            Text(
+                            const Text(
                               "4 Wheeler",
                               style: TextStyle(
                                 color: Colors.black45,
@@ -98,22 +108,26 @@ class _BookConfirmState extends State<BookConfirm> {
                   ),
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       child: Obx(
                         () => Column(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
+                                const Text(
                                   "Date",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Text(
                                   bookController.selectedDate.value != null
                                       ? '${bookController.selectedDate.value!.day}-${bookController.selectedDate.value!.month}-${bookController.selectedDate.value!.year}'
                                       : 'No date selected',
-                                  style: TextStyle(color: Colors.black54),
+                                  style: const TextStyle(
+                                    color: Colors.black54,
+                                  ),
                                 ),
                               ],
                             ),
@@ -123,16 +137,20 @@ class _BookConfirmState extends State<BookConfirm> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
+                                const Text(
                                   "Slot Time",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Text(
                                   bookController.selectedTime.value != null
                                       ? bookController.selectedTime.value!
                                           .format(context)
                                       : 'No time selected',
-                                  style: TextStyle(color: Colors.black54),
+                                  style: const TextStyle(
+                                    color: Colors.black54,
+                                  ),
                                 ),
                               ],
                             ),
@@ -142,13 +160,17 @@ class _BookConfirmState extends State<BookConfirm> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
+                                const Text(
                                   "Connection Type",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Text(
                                   bookController.connectionTypevar.value,
-                                  style: TextStyle(color: Colors.black54),
+                                  style: const TextStyle(
+                                    color: Colors.black54,
+                                  ),
                                 ),
                               ],
                             ),
@@ -158,13 +180,15 @@ class _BookConfirmState extends State<BookConfirm> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
+                                const Text(
                                   "Charger Type",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Text(
                                   bookController.chargerTypevar.value,
-                                  style: TextStyle(color: Colors.black54),
+                                  style: const TextStyle(color: Colors.black54),
                                 ),
                               ],
                             ),
@@ -174,13 +198,13 @@ class _BookConfirmState extends State<BookConfirm> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
+                                const Text(
                                   "Price",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   "\$ ${bookController.price.value} kw",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.blue,
                                   ),
                                 ),
@@ -205,7 +229,10 @@ class _BookConfirmState extends State<BookConfirm> {
               children: [
                 const Text(
                   "Total Pay ",
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 Obx(
                   () => Text(
@@ -222,14 +249,18 @@ class _BookConfirmState extends State<BookConfirm> {
               height: h * 0.05,
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: h * 0.02),
+              padding: EdgeInsets.only(
+                bottom: h * 0.02,
+              ),
               child: SizedBox(
                 width: double.infinity,
                 height: h * 0.06,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(
+                        15,
+                      ),
                     ),
                     backgroundColor: Colors.blue,
                   ),
@@ -238,7 +269,9 @@ class _BookConfirmState extends State<BookConfirm> {
                     bookController.clearAll();
 
                     Get.snackbar("Successfully", "Slot booked successfully");
-                    Get.to(() => Navigation());
+                    Get.to(
+                      () => Navigation(),
+                    );
                   },
                   child: const Text(
                     "Make Payment",

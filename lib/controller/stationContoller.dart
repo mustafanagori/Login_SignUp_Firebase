@@ -172,8 +172,8 @@ class StationController extends GetxController {
       }
     } catch (e) {
       Get.snackbar(
-        "Alert",
-        "Invalid route, you are too far from your location",
+        "Error on making route",
+        "$e",
       );
       if (kDebugMode) {
         print('Error drawing polyline: $e');

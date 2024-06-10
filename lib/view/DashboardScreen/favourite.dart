@@ -22,16 +22,18 @@ class Favourite extends StatelessWidget {
           vertical: h * 0.01,
           horizontal: w * 0.03,
         ),
-        child: ListView.builder(
-          itemCount: favrouiteController.favrouiteStation.length,
-          itemBuilder: (context, index) {
-            final station = favrouiteController.favrouiteStation[index];
-            return FavrouiteStationCard(
-              path: station['path']!,
-              stationName: station['name']!,
-            );
-          },
-        ),
+        child: favrouiteController.favrouiteStation.isEmpty
+            ? const Center(child: Text("No date"))
+            : ListView.builder(
+                itemCount: favrouiteController.favrouiteStation.length,
+                itemBuilder: (context, index) {
+                  final station = favrouiteController.favrouiteStation[index];
+                  return FavrouiteStationCard(
+                    path: station['path']!,
+                    stationName: station['name']!,
+                  );
+                },
+              ),
       ),
     );
   }

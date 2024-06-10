@@ -162,12 +162,19 @@ class _LoginState extends State<Login> {
                                         ),
                                       )
                                     : CustomButton(
-                                        onPressed: () {
-                                          if (loginController
-                                              .loginPasswordFormKey
-                                              .currentState!
-                                              .validate()) {
-                                            loginController.signIn();
+                                        onPressed: () async {
+                                          try {
+                                            loginController
+                                                .storeDeviceToSharedPrefernces();
+                                            if (loginController
+                                                .loginPasswordFormKey
+                                                .currentState!
+                                                .validate()) {
+                                              await loginController.signIn();
+                                            }
+                                          } catch (e) {
+                                            print(
+                                                "Error storing device token or signing in: $e");
                                           }
                                         },
                                         text: "Continue",

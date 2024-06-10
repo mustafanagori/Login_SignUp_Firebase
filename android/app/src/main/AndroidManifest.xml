@@ -3,9 +3,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.RECEIVE_NOTIFICATIONS" />
 
 
     <application
+        android:enableOnBackInvokedCallback="true"
         android:label="signup_login"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
@@ -38,9 +40,14 @@
             android:value="2" />
         
         <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel" />
+        
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCzIH1d8gJ3qh1jqoEnE_5O-d27fSPJpZM"
         />
+        
             
 
     </application>
