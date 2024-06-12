@@ -50,6 +50,7 @@ class SignupController extends GetxController {
           .doc(uid)
           .set({'email': emailController.text, 'name': nameController.text});
       print("User data saved to Firestore successfully");
+      clear();
     } catch (e) {
       print("Error saving user data to Firestore: $e");
       Get.snackbar("Error", "Failed to save user data",
@@ -57,14 +58,9 @@ class SignupController extends GetxController {
     }
   }
 
-  @override
-  void dispose() {
+  void clear() {
     emailController.clear();
     passwordController.clear();
     nameController.clear();
-    emailController.dispose();
-    passwordController.dispose();
-    nameController.dispose();
-    super.dispose();
   }
 }

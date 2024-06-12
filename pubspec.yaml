@@ -59,6 +59,7 @@ dependencies:
   flutter_local_notifications: ^17.1.2
   firebase_messaging: ^14.9.2
   shared_preferences: ^2.2.3
+  google_sign_in: ^6.2.1
 
   # to provide animation to marker when live tracking
   
@@ -66,6 +67,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_icons:
+  android: true
+  iOS: true
+  image_path: "assets/logo.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/logo_foreground.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

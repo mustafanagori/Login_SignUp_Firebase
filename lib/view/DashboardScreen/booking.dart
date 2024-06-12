@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:signup_login/view/booking/booking_history.dart';
 import 'package:signup_login/view/booking/ongoing-booking.dart';
 
 class Booking extends StatefulWidget {
   const Booking({super.key});
-
   @override
   State<Booking> createState() => _BookingState();
 }
@@ -13,7 +11,6 @@ class Booking extends StatefulWidget {
 class _BookingState extends State<Booking> {
   @override
   Widget build(BuildContext context) {
-   
     return DefaultTabController(
       length: 2,
       child: Scaffold(

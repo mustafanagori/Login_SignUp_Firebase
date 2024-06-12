@@ -28,6 +28,7 @@ class ProfileController extends GetxController {
       if (documentSnapshot.exists) {
         email.value = documentSnapshot.data()?['email'] ?? '';
         name.value = documentSnapshot.data()?['name'] ?? 'no name';
+        print('Name: ${name.value}'); // Add this line for debugging
       } else {
         print('User document does not exist in Firestore');
       }

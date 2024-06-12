@@ -8,7 +8,7 @@
 
     <application
         android:enableOnBackInvokedCallback="true"
-        android:label="signup_login"
+        android:label="EV Charger"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
