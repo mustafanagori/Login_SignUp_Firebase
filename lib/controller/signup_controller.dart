@@ -10,35 +10,29 @@ class SignupController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
 
-  // Form key
-  final GlobalKey<FormState> userRegisterFormKey = GlobalKey<FormState>();
-
   // Loading state
   RxBool isLoadingSignUp = false.obs;
 
   // User register function
   void registerUser() async {
-    if (userRegisterFormKey.currentState!.validate()) {
-      isLoadingSignUp.value = true;
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
-        if (FirebaseAuth.instance.currentUser != null) {
-          await saveUserDataToFirestore(FirebaseAuth.instance.currentUser!.uid);
-          Get.snackbar("Success", "You are registered",
-              colorText: Colors.white);
-          Get.to(() => Wellcome());
-        } else {
-          Get.snackbar("Error", "Please sign in first",
-              colorText: Colors.white);
-        }
-      } on FirebaseAuthException catch (e) {
-        Get.snackbar("Error", "${e.message}", colorText: Colors.white);
-      } finally {
-        isLoadingSignUp.value = false;
+    isLoadingSignUp.value = true;
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      if (FirebaseAuth.instance.currentUser != null) {
+        await saveUserDataToFirestore(FirebaseAuth.instance.currentUser!.uid);
+        Get.snackbar("Success", "You are registered", colorText: Colors.white);
+        Get.to(() => Wellcome());
+        clear();
+      } else {
+        Get.snackbar("Error", "Please sign in first", colorText: Colors.white);
       }
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar("Error", "${e}", colorText: Colors.white);
+    } finally {
+      isLoadingSignUp.value = false;
     }
   }
 
@@ -50,7 +44,6 @@ class SignupController extends GetxController {
           .doc(uid)
           .set({'email': emailController.text, 'name': nameController.text});
       print("User data saved to Firestore successfully");
-      clear();
     } catch (e) {
       print("Error saving user data to Firestore: $e");
       Get.snackbar("Error", "Failed to save user data",

@@ -20,6 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
     await Future.delayed(const Duration(seconds: 3));
+
+    // Check authentication status and navigate
     if (user != null) {
       Get.off(() => Navigation());
     } else {
@@ -30,14 +32,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 243, 238, 238),
-      body: Center(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Image.asset(
-            'assets/ev2.jpeg',
-            fit: BoxFit.fill,
-          ),
+      //backgroundColor: const Color.fromARGB(255, 243, 238, 238),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Image.asset(
+          'assets/station/4.jpg',
+          fit: BoxFit.fitHeight,
         ),
       ),
     );

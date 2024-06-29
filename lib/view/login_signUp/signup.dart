@@ -7,17 +7,17 @@ import 'package:signup_login/controller/signup_controller.dart';
 import 'package:signup_login/view/login_signUp/wellcome.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
-
+  const SignUp({Key? key}) : super(key: key);
   @override
   State<SignUp> createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+  final GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
   final SignupController signupController = Get.find();
 
-  bool _isObscure = true; // Default is true to obscure the password
-  @override
+  bool _isObscure = true;
+
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -60,7 +60,6 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          // Glass container
                           ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: Container(
@@ -76,7 +75,7 @@ class _SignUpState extends State<SignUp> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20.0),
                                   child: Form(
-                                    key: signupController.userRegisterFormKey,
+                                    key: signUpFormKey,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -86,7 +85,6 @@ class _SignUpState extends State<SignUp> {
                                         SizedBox(height: h * 0.02),
                                         Column(
                                           children: [
-                                            // Name TextField
                                             SizedBox(
                                               height: h * 0.08,
                                               child: TextFormField(
@@ -125,7 +123,6 @@ class _SignUpState extends State<SignUp> {
                                                 },
                                               ),
                                             ),
-                                            // Email TextField
                                             SizedBox(
                                               height: h * 0.08,
                                               child: TextFormField(
@@ -164,7 +161,6 @@ class _SignUpState extends State<SignUp> {
                                                 },
                                               ),
                                             ),
-                                            // Password TextField
                                             SizedBox(
                                               height: h * 0.08,
                                               child: TextFormField(
@@ -264,11 +260,9 @@ class _SignUpState extends State<SignUp> {
                                                 )
                                               : CustomButton(
                                                   onPressed: () {
-                                                    if (signupController
-                                                            .userRegisterFormKey
-                                                            .currentState
-                                                            ?.validate() ??
-                                                        false) {
+                                                    if (signUpFormKey
+                                                        .currentState!
+                                                        .validate()) {
                                                       signupController
                                                           .registerUser();
                                                     }
@@ -288,14 +282,15 @@ class _SignUpState extends State<SignUp> {
                     ),
                     Positioned(
                       child: IconButton(
-                          onPressed: () {
-                            Get.to(Wellcome());
-                          },
-                          icon: Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.white,
-                            size: 25,
-                          )),
+                        onPressed: () {
+                          Get.to(() => Wellcome());
+                        },
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -309,7 +304,8 @@ class _SignUpState extends State<SignUp> {
 }
 
 class TopText extends StatelessWidget {
-  const TopText({super.key, required this.h});
+  const TopText({Key? key, required this.h})
+      : super(key: key); // Ensure unique key for TopText widget
   final double h;
 
   @override

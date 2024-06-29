@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signup_login/compnent/otherWidget/CustomButton.dart';
+import 'package:signup_login/controller/wellcome_controller.dart';
 
 import '../../controller/login_controller.dart';
 
@@ -15,6 +16,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final LoginController loginController = Get.find();
+  final WellcomeController wellcomeController = Get.find();
+  final GlobalKey<FormState> LoginFormKey = GlobalKey<FormState>();
   bool _isObscure = true;
 
   @override
@@ -93,8 +96,7 @@ class _LoginState extends State<Login> {
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       Text(
-                                        loginController
-                                            .loginEmailController.text,
+                                        loginController.emailController.text,
                                         style: const TextStyle(
                                             color: Colors.white),
                                       )
@@ -106,12 +108,12 @@ class _LoginState extends State<Login> {
                                 height: h * 0.04,
                               ),
                               Form(
-                                key: loginController.loginPasswordFormKey,
+                                key: LoginFormKey,
                                 child: TextFormField(
                                   cursorColor: Colors.green.shade500,
                                   obscureText: _isObscure,
                                   controller:
-                                      loginController.loginPasswordController,
+                                      loginController.passwordController,
                                   keyboardType: TextInputType.visiblePassword,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
@@ -164,12 +166,9 @@ class _LoginState extends State<Login> {
                                     : CustomButton(
                                         onPressed: () async {
                                           try {
-                                            //  loginController.storeDeviceToSharedPrefernces();
-                                            if (loginController
-                                                .loginPasswordFormKey
-                                                .currentState!
+                                            if (LoginFormKey.currentState!
                                                 .validate()) {
-                                              await loginController.signIn();
+                                              loginController.signIn();
                                             }
                                           } catch (e) {
                                             print(

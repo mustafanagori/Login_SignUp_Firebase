@@ -6,12 +6,13 @@ import 'package:signup_login/compnent/login/dont_have_account.dart';
 import 'package:signup_login/compnent/login/forget_password_text.dart';
 import 'package:signup_login/compnent/otherWidget/CustomButton.dart';
 import 'package:signup_login/compnent/otherWidget/SocialButton.dart';
-
-import '../../controller/login_controller.dart';
+import 'package:signup_login/controller/login_controller.dart';
+import 'package:signup_login/controller/wellcome_controller.dart';
 
 class Wellcome extends StatelessWidget {
+  final GlobalKey<FormState> wellcomeFormKey = GlobalKey<FormState>();
+  final WellcomeController wellcomeController = Get.find();
   final LoginController loginController = Get.find();
-
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -63,7 +64,7 @@ class Wellcome extends StatelessWidget {
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                           child: Form(
-                            key: loginController.loginEmailFormKey,
+                            key: wellcomeFormKey,
                             child: Column(
                               children: [
                                 SizedBox(
@@ -74,8 +75,7 @@ class Wellcome extends StatelessWidget {
                                   width: w * 0.80,
                                   child: TextFormField(
                                     cursorColor: Colors.blue.shade500,
-                                    controller:
-                                        loginController.loginEmailController,
+                                    controller: loginController.emailController,
                                     keyboardType: TextInputType.emailAddress,
                                     decoration: InputDecoration(
                                       border: OutlineInputBorder(
@@ -105,7 +105,7 @@ class Wellcome extends StatelessWidget {
                                   height: h * 0.01,
                                 ),
                                 Obx(
-                                  () => loginController.isLoadingSignIn.value
+                                  () => loginController.isLoadingCheckUser.value
                                       ? const Center(
                                           child: CircularProgressIndicator(
                                             color: Colors.blue,
@@ -113,8 +113,11 @@ class Wellcome extends StatelessWidget {
                                         )
                                       : CustomButton(
                                           onPressed: () {
-                                            loginController
-                                                .checkUserEmailExists();
+                                            if (wellcomeFormKey.currentState!
+                                                .validate()) {
+                                              loginController
+                                                  .checkUserEmailExists();
+                                            }
                                           },
                                           text: "Agree and Continue",
                                         ),

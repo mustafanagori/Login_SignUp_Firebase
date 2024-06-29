@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:signup_login/controller/login_controller.dart';
 
 class LoginField extends StatelessWidget {
-  const LoginField({
+  LoginField({
     super.key,
     required this.loginController,
   });
@@ -13,13 +13,12 @@ class LoginField extends StatelessWidget {
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
-
     return Container(
       height: h * 0.088,
       width: w * 0.80,
       child: TextFormField(
         cursorColor: Colors.green.shade500,
-        controller: loginController.loginEmailController,
+        controller: loginController.emailController,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           border: OutlineInputBorder(

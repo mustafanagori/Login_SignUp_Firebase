@@ -6,14 +6,12 @@ import 'package:signup_login/view/navigation.dart';
 
 class BookConfirm extends StatefulWidget {
   const BookConfirm({super.key});
-
   @override
   State<BookConfirm> createState() => _BookConfirmState();
 }
 
 class _BookConfirmState extends State<BookConfirm> {
   final BookController bookController = Get.find();
-
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;

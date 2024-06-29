@@ -5,15 +5,16 @@ import 'package:signup_login/controller/favrouite_controller.dart';
 
 class Favourite extends StatelessWidget {
   const Favourite({super.key});
-
   @override
   Widget build(BuildContext context) {
+    //
     FavrouiteController favrouiteController = Get.find();
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
-
+    //
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: const Text("Favourite"),
       ),
@@ -23,7 +24,9 @@ class Favourite extends StatelessWidget {
           horizontal: w * 0.03,
         ),
         child: favrouiteController.favrouiteStation.isEmpty
-            ? const Center(child: Text("No date"))
+            ? const Center(
+                child: Text("No date"),
+              )
             : ListView.builder(
                 itemCount: favrouiteController.favrouiteStation.length,
                 itemBuilder: (context, index) {
@@ -38,38 +41,3 @@ class Favourite extends StatelessWidget {
     );
   }
 }
-
-// class Favourite extends StatelessWidget {
-//   const Favourite({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-
-  
-//     var h = MediaQuery.of(context).size.height;
-//     var w = MediaQuery.of(context).size.width;
-//     return Scaffold(
-//       appBar: AppBar(
-//         //iconTheme: const IconThemeData(color: Colors.white),k,
-//         automaticallyImplyLeading: false,
-//         centerTitle: true,
-//         title: const Text("Favrouite"),
-//       ),
-//       body: Padding(
-//         padding: EdgeInsets.symmetric(
-//           vertical: h * 0.01,
-//           horizontal: w * 0.03,
-//         ),
-//         child: ListView(
-//           children: const [
-//             FavrouiteStationCard(
-//               path: "assets/station/1.jpeg",
-//               stationName: "Broome Charging Stataion",
-//             ),
-            
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

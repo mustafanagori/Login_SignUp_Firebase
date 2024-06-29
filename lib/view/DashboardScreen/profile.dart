@@ -126,7 +126,7 @@ class _ProfileState extends State<Profile> {
                               onPressed: () async {
                                 stationController.resetTracking();
                                 // loginController.loginEmailController.clear();
-                                loginController.loginPasswordController.clear();
+                                loginController.passwordController.clear();
                                 await loginController.signOutUser();
                               },
                               child: const Text(
